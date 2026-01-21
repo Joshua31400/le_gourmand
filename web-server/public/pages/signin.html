@@ -10,11 +10,7 @@
 <body>
 <main>
     <h1>Sign In</h1>
-    <form action="" method="post">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-        </div>
+    <form id="signinForm">
         <div>
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
@@ -23,11 +19,16 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
-        <button type="submit">Sign in </button>
+        <button type="submit">Sign in</button>
     </form>
+
+    <div id="errorMessage" style="display: none; color: red; margin-top: 10px;"></div>
 </main>
 <footer>
     <p>&copy; 2026 Le Gourmand. All rights reserved.</p>
 </footer>
+
+<script src="/scripts/config.js"></script>
+<script src="/scripts/signin.js"></script>
 </body>
 </html>
