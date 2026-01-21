@@ -1,0 +1,45 @@
+#user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    color: var(--surface-color);
+    background-color: var(--secondary-color);
+    padding: var(--page-padding);
+    border-radius: var(--page-radius);
+}
+
+#user-info img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    margin-right: 1.5rem;
+    border-radius: var(--button-radius);
+}
+
+#username {
+    font-weight: bold;
+    font-size: var(--font-size-large);
+}
+
+#favorites {
+    margin-bottom: 2rem;
+    color: var(--surface-color);
+    background-color: var(--secondary-color);
+    padding: var(--page-padding);
+    border-radius: var(--page-radius);
+}
+
+#shared {
+    margin-bottom: 2rem;
+    color: var(--surface-color);
+    background-color: var(--secondary-color);
+    padding: var(--page-padding);
+    border-radius: var(--page-radius);
+}
+
+#my-recipes {
+    color: var(--surface-color);
+    background-color: var(--secondary-color);
+    padding: var(--page-padding);
+    border-radius: var(--page-radius);
+}

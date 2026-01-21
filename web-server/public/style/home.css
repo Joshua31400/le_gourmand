@@ -1,0 +1,74 @@
+#search-section {
+    margin-bottom: 2rem;
+    color: var(--surface-color);
+    background-color: var(--secondary-color);
+    padding: var(--page-padding);
+    border-radius: var(--page-radius);
+}
+
+#search-section input {
+    width: 60%;
+    background-color: var(--surface-color);
+}
+
+#filters {
+    margin-bottom: 2rem;
+    background-color: var(--secondary-color);
+    color: var(--surface-color);
+    border-radius: var(--page-radius);
+    padding: var(--page-padding);
+}
+
+#filters form {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+#filters button {
+    align-self: flex-end;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+legend {
+    font-weight: bold;
+    color: var(--accent-color);
+    font-size: var(--font-size-base);
+}
+
+
+label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: var(--font-size-small);
+}
+
+button {
+    cursor: pointer;
+    transition: background 0.3s;
+    color: var(--surface-color);
+    background: var(--primary-color);
+}
+
+button:hover {
+    background: var(--accent-color);
+}
+
+#recipes-list {
+    color: var(--surface-color);
+    background-color: var(--secondary-color);
+    padding: var(--page-padding);
+    border-radius: var(--page-radius);
+}

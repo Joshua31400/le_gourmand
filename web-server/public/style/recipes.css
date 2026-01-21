@@ -1,0 +1,57 @@
+article {
+    margin: 2rem auto;
+}
+
+article header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+article header img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--page-radius);
+}
+
+article h1 {
+    font-size: var(--font-size-large);
+    color: var(--primary-color);
+}
+
+article button {
+    margin-top: 1rem;
+}
+
+section {
+    margin-bottom: 2rem;
+    text-align: left;
+    color: var(--surface-color);
+    background-color: var(--secondary-color);
+    padding: var(--page-padding);
+    border-radius: var(--page-radius);
+}
+
+section h2 {
+    color: var(--accent-color);
+    font-size: var(--font-size-base);
+    margin-bottom: 0.5rem;
+}
+
+dl, ul, ol {
+    margin-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+dt {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+dd {
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
+}
