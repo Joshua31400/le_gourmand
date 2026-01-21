@@ -13,6 +13,8 @@ router.put('/:id', verifyToken, recipeController.updateRecipe);
 router.delete('/:id', verifyToken, recipeController.deleteRecipe);
 router.post('/:id/favorite', verifyToken, recipeController.addToFavorites);
 router.delete('/:id/favorite', verifyToken, recipeController.removeFromFavorites);
+router.post('/:id/share', verifyToken, recipeController.addToShared);
+router.delete('/:id/share', verifyToken, recipeController.removeFromShared);
 router.post('/:id/rate', verifyToken, recipeController.rateRecipe);
 
 module.exports = router;

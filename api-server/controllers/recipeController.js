@@ -263,6 +263,78 @@ exports.removeFromFavorites = async (req, res) => {
     }
 };
 
+// POST add to shared
+exports.addToShared = async (req, res) => {
+    try {
+        const { id } = req.params; // recipe_id
+        const user_id = req.user.id; // Get from JWT token
+
+        // Check if already shared
+        const [existing] = await db.query(
+            `SELECT id FROM user_shared WHERE user_id = ? AND recipe_id = ?`,
+            [user_id, id]
+        );
+
+        if (existing.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: 'Recipe already shared'
+            });
+        }
+
+        await db.query(
+            `INSERT INTO user_shared (user_id, recipe_id) VALUES (?, ?)`,
+            [user_id, id]
+        );
+
+        res.json({
+            success: true,
+            message: 'Recipe shared successfully'
+        });
+
+    } catch (error) {
+        console.error('Error sharing recipe:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error sharing recipe',
+            error: error.message
+        });
+    }
+};
+
+// DELETE remove from shared
+exports.removeFromShared = async (req, res) => {
+    try {
+        const { id } = req.params; // recipe_id
+        const user_id = req.user.id; // Get from JWT token
+
+        const [result] = await db.query(
+            `DELETE FROM user_shared WHERE user_id = ? AND recipe_id = ?`,
+            [user_id, id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Recipe not in shared list'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Recipe removed from shared list'
+        });
+
+    } catch (error) {
+        console.error('Error removing shared recipe:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error removing shared recipe',
+            error: error.message
+        });
+    }
+};
+
 // POST rate recipe
 exports.rateRecipe = async (req, res) => {
     try {
