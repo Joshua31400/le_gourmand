@@ -3,7 +3,7 @@ const db = require('../config/database');
 // GET all recipes with search and filters - OPTIMIZED with JOIN
 exports.getAllRecipes = async (req, res) => {
     try {
-        const { search, diet, type, country } = req.query;
+        const { search, diet, type, country, ingredients } = req.query;
 
         let query = `
             SELECT
@@ -15,27 +15,26 @@ exports.getAllRecipes = async (req, res) => {
                 rt.name as type_name,
                 c.name as country_name,
                 AVG(rn.note) as average_rating,
-                COUNT(DISTINCT uf.id) as favorites_count
+                COUNT(DISTINCT uf.id) as favorites_count,
+                GROUP_CONCAT(DISTINCT i.id ORDER BY i.name ASC) as ingredient_ids,
+                GROUP_CONCAT(DISTINCT i.name ORDER BY i.name ASC SEPARATOR ', ') as ingredient_names
             FROM recipes r
                      LEFT JOIN diets d ON r.diet_id = d.id
                      LEFT JOIN recipe_types rt ON r.type_id = rt.id
                      LEFT JOIN countries c ON r.country_id = c.id
                      LEFT JOIN recipe_notes rn ON r.id = rn.recipe_id
                      LEFT JOIN user_favorites uf ON r.id = uf.recipe_id
+                     LEFT JOIN relation_recipe_ingredients rri ON r.id = rri.recipe_id
+                     LEFT JOIN ingredients i ON rri.ingredient_id = i.id
             WHERE 1=1
         `;
 
         const params = [];
 
-        // Search by name or ingredient
+        // Search by name
         if (search) {
-            query += ` AND (r.name LIKE ? OR r.id IN (
-                SELECT rri.recipe_id 
-                FROM relation_recipe_ingredients rri
-                JOIN ingredients i ON rri.ingredient_id = i.id
-                WHERE i.name LIKE ?
-            ))`;
-            params.push(`%${search}%`, `%${search}%`);
+            query += ` AND r.name LIKE ?`;
+            params.push(`%${search}%`);
         }
 
         // Filter by diet
@@ -56,15 +55,57 @@ exports.getAllRecipes = async (req, res) => {
             params.push(country);
         }
 
+        // Filter by ingredients
+        if (ingredients) {
+            const ingredientIds = ingredients.split(',').map(id => id.trim());
+
+            // Find recipes that have ALL specified ingredients
+            query += ` AND r.id IN (
+                SELECT rri3.recipe_id
+                FROM relation_recipe_ingredients rri3
+                WHERE rri3.ingredient_id IN (${ingredientIds.map(() => '?').join(',')})
+                GROUP BY rri3.recipe_id
+                HAVING COUNT(DISTINCT rri3.ingredient_id) = ?
+            )`;
+
+            params.push(...ingredientIds, ingredientIds.length);
+        }
+
         query += ` GROUP BY r.id, r.name, r.picture, r.description, d.name, rt.name, c.name`;
         query += ` ORDER BY r.name ASC`;
 
         const [recipes] = await db.query(query, params);
 
+        // Format the response to parse ingredients into arrays
+        const formattedRecipes = recipes.map(recipe => {
+            // Parse ingredient IDs and names into arrays
+            const ingredientIds = recipe.ingredient_ids ? recipe.ingredient_ids.split(',').map(id => parseInt(id)) : [];
+            const ingredientNames = recipe.ingredient_names ? recipe.ingredient_names.split(', ') : [];
+
+            // Create ingredients array with id and name
+            const ingredients = ingredientIds.map((id, index) => ({
+                id: id,
+                name: ingredientNames[index]
+            }));
+
+            return {
+                id: recipe.id,
+                name: recipe.name,
+                picture: recipe.picture,
+                description: recipe.description,
+                diet_name: recipe.diet_name,
+                type_name: recipe.type_name,
+                country_name: recipe.country_name,
+                average_rating: recipe.average_rating,
+                favorites_count: recipe.favorites_count,
+                ingredients: ingredients
+            };
+        });
+
         res.json({
             success: true,
-            count: recipes.length,
-            data: recipes
+            count: formattedRecipes.length,
+            data: formattedRecipes
         });
 
     } catch (error) {
