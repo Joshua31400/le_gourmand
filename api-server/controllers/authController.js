@@ -149,7 +149,7 @@ exports.logout = async (req, res) => {
     });
 };
 
-// GET verify token (opcional - para verificar se token ainda é válido)
+// GET verify token
 exports.verifyToken = async (req, res) => {
     res.json({
         success: true,

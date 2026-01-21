@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // Middleware
 app.use(cors());
@@ -13,15 +13,27 @@ app.use(express.json());
 const recipeRoutes = require('./routes/recipes');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
+const ingredientRoutes = require('./routes/ingredients');
+const dietRoutes = require('./routes/diets');
+const countryRoutes = require('./routes/countries');
+const recipeTypeRoutes = require('./routes/recipeTypes');
 
 // Use routes
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/ingredients', ingredientRoutes);
+app.use('/api/diets', dietRoutes);
+app.use('/api/countries', countryRoutes);
+app.use('/api/recipe-types', recipeTypeRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', message: 'API is running' });
+    res.json({
+        status: 'ok',
+        message: 'API is running',
+        database: process.env.DB_NAME
+    });
 });
 
 // 404 handler
