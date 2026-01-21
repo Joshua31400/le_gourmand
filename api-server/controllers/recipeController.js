@@ -6,7 +6,7 @@ exports.getAllRecipes = async (req, res) => {
         const { search, diet, type, country } = req.query;
 
         let query = `
-            SELECT 
+            SELECT
                 r.id,
                 r.name,
                 r.picture,
@@ -17,11 +17,11 @@ exports.getAllRecipes = async (req, res) => {
                 AVG(rn.note) as average_rating,
                 COUNT(DISTINCT uf.id) as favorites_count
             FROM recipes r
-            LEFT JOIN diets d ON r.diet_id = d.id
-            LEFT JOIN recipe_types rt ON r.type_id = rt.id
-            LEFT JOIN countries c ON r.country_id = c.id
-            LEFT JOIN recipe_notes rn ON r.id = rn.recipe_id
-            LEFT JOIN user_favorites uf ON r.id = uf.recipe_id
+                     LEFT JOIN diets d ON r.diet_id = d.id
+                     LEFT JOIN recipe_types rt ON r.type_id = rt.id
+                     LEFT JOIN countries c ON r.country_id = c.id
+                     LEFT JOIN recipe_notes rn ON r.id = rn.recipe_id
+                     LEFT JOIN user_favorites uf ON r.id = uf.recipe_id
             WHERE 1=1
         `;
 
@@ -84,7 +84,7 @@ exports.getRecipeById = async (req, res) => {
 
         // Main recipe info with related data
         const recipeQuery = `
-            SELECT 
+            SELECT
                 r.*,
                 d.name as diet_name,
                 rt.name as type_name,
@@ -93,22 +93,22 @@ exports.getRecipeById = async (req, res) => {
                 COUNT(DISTINCT rn.id) as total_ratings,
                 COUNT(DISTINCT uf.id) as favorites_count
             FROM recipes r
-            LEFT JOIN diets d ON r.diet_id = d.id
-            LEFT JOIN recipe_types rt ON r.type_id = rt.id
-            LEFT JOIN countries c ON r.country_id = c.id
-            LEFT JOIN recipe_notes rn ON r.id = rn.recipe_id
-            LEFT JOIN user_favorites uf ON r.id = uf.recipe_id
+                     LEFT JOIN diets d ON r.diet_id = d.id
+                     LEFT JOIN recipe_types rt ON r.type_id = rt.id
+                     LEFT JOIN countries c ON r.country_id = c.id
+                     LEFT JOIN recipe_notes rn ON r.id = rn.recipe_id
+                     LEFT JOIN user_favorites uf ON r.id = uf.recipe_id
             WHERE r.id = ?
             GROUP BY r.id
         `;
 
         // Get ingredients for this recipe
         const ingredientsQuery = `
-            SELECT 
+            SELECT
                 i.id,
                 i.name
             FROM ingredients i
-            JOIN relation_recipe_ingredients rri ON i.id = rri.ingredient_id
+                     JOIN relation_recipe_ingredients rri ON i.id = rri.ingredient_id
             WHERE rri.recipe_id = ?
         `;
 
@@ -150,12 +150,13 @@ exports.createRecipe = async (req, res) => {
         await connection.beginTransaction();
 
         const { name, picture, description, preparation, diet_id, type_id, country_id, ingredients } = req.body;
+        const user_id = req.user.id;
 
-        // Insert recipe
+        // Insert recipe with user_id
         const [recipeResult] = await connection.query(
-            `INSERT INTO recipes (name, picture, description, preparation, diet_id, type_id, country_id) 
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [name, picture, description, preparation, diet_id, type_id, country_id]
+            `INSERT INTO recipes (name, picture, description, preparation, diet_id, type_id, country_id, user_id)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [name, picture, description, preparation, diet_id, type_id, country_id, user_id]
         );
 
         const recipeId = recipeResult.insertId;
@@ -194,7 +195,20 @@ exports.createRecipe = async (req, res) => {
 exports.addToFavorites = async (req, res) => {
     try {
         const { id } = req.params; // recipe_id
-        const { user_id } = req.body; // TODO: Get from session/JWT later
+        const user_id = req.user.id; // Get from JWT token
+
+        // Check if already favorited
+        const [existing] = await db.query(
+            `SELECT id FROM user_favorites WHERE user_id = ? AND recipe_id = ?`,
+            [user_id, id]
+        );
+
+        if (existing.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: 'Recipe already in favorites'
+            });
+        }
 
         await db.query(
             `INSERT INTO user_favorites (user_id, recipe_id) VALUES (?, ?)`,
@@ -220,12 +234,19 @@ exports.addToFavorites = async (req, res) => {
 exports.removeFromFavorites = async (req, res) => {
     try {
         const { id } = req.params; // recipe_id
-        const { user_id } = req.body; // TODO: Get from session/JWT later
+        const user_id = req.user.id; // Get from JWT token
 
-        await db.query(
+        const [result] = await db.query(
             `DELETE FROM user_favorites WHERE user_id = ? AND recipe_id = ?`,
             [user_id, id]
         );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Recipe not in favorites'
+            });
+        }
 
         res.json({
             success: true,
@@ -245,8 +266,17 @@ exports.removeFromFavorites = async (req, res) => {
 // POST rate recipe
 exports.rateRecipe = async (req, res) => {
     try {
-        const { id } = req.params; // recipe_id
-        const { user_id, note } = req.body; // note: 1-5
+        const { id } = req.params;
+        const { note } = req.body;
+        const user_id = req.user.id;
+
+        // Validate note
+        if (!note || note < 1 || note > 5) {
+            return res.status(400).json({
+                success: false,
+                message: 'Note must be between 1 and 5'
+            });
+        }
 
         // Check if user already rated
         const [existing] = await db.query(
@@ -292,6 +322,29 @@ exports.updateRecipe = async (req, res) => {
 
         const { id } = req.params;
         const { name, picture, description, preparation, diet_id, type_id, country_id, ingredients } = req.body;
+        const user_id = req.user.id; // Get from JWT token
+
+        // Check if user owns this recipe
+        const [recipe] = await connection.query(
+            `SELECT user_id FROM recipes WHERE id = ?`,
+            [id]
+        );
+
+        if (recipe.length === 0) {
+            await connection.rollback();
+            return res.status(404).json({
+                success: false,
+                message: 'Recipe not found'
+            });
+        }
+
+        if (recipe[0].user_id !== user_id) {
+            await connection.rollback();
+            return res.status(403).json({
+                success: false,
+                message: 'You do not have permission to update this recipe'
+            });
+        }
 
         // Update recipe
         await connection.query(
@@ -345,6 +398,29 @@ exports.deleteRecipe = async (req, res) => {
         await connection.beginTransaction();
 
         const { id } = req.params;
+        const user_id = req.user.id; // Get from JWT token
+
+        // Check if user owns this recipe
+        const [recipe] = await connection.query(
+            `SELECT user_id FROM recipes WHERE id = ?`,
+            [id]
+        );
+
+        if (recipe.length === 0) {
+            await connection.rollback();
+            return res.status(404).json({
+                success: false,
+                message: 'Recipe not found'
+            });
+        }
+
+        if (recipe[0].user_id !== user_id) {
+            await connection.rollback();
+            return res.status(403).json({
+                success: false,
+                message: 'You do not have permission to delete this recipe'
+            });
+        }
 
         // Delete related data first (foreign key constraints)
         await connection.query(`DELETE FROM relation_recipe_ingredients WHERE recipe_id = ?`, [id]);

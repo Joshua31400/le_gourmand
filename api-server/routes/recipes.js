@@ -1,30 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const recipeController = require('../controllers/recipeController');
+const { verifyToken, optionalAuth } = require('../middleware/auth');
 
-// GET all recipes with search and filters
-// Query params: ?search=pasta&diet=1&type=2&country=3
+// Public routes (no authentication needed)
 router.get('/', recipeController.getAllRecipes);
-
-// GET single recipe with all details
 router.get('/:id', recipeController.getRecipeById);
 
-// POST create new recipe
-router.post('/', recipeController.createRecipe);
-
-// PUT update recipe
-router.put('/:id', recipeController.updateRecipe);
-
-// DELETE recipe
-router.delete('/:id', recipeController.deleteRecipe);
-
-// POST add recipe to favorites
-router.post('/:id/favorite', recipeController.addToFavorites);
-
-// DELETE remove from favorites
-router.delete('/:id/favorite', recipeController.removeFromFavorites);
-
-// POST rate a recipe
-router.post('/:id/rate', recipeController.rateRecipe);
+// Protected routes (authentication required)
+router.post('/', verifyToken, recipeController.createRecipe);
+router.put('/:id', verifyToken, recipeController.updateRecipe);
+router.delete('/:id', verifyToken, recipeController.deleteRecipe);
+router.post('/:id/favorite', verifyToken, recipeController.addToFavorites);
+router.delete('/:id/favorite', verifyToken, recipeController.removeFromFavorites);
+router.post('/:id/rate', verifyToken, recipeController.rateRecipe);
 
 module.exports = router;

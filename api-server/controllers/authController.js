@@ -1,5 +1,19 @@
 const db = require('../config/database');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+// Helper function to generate JWT token
+const generateToken = (user) => {
+    return jwt.sign(
+        {
+            id: user.id,
+            email: user.email,
+            username: user.username
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    );
+};
 
 // POST register
 exports.register = async (req, res) => {
@@ -36,13 +50,21 @@ exports.register = async (req, res) => {
             [email, username, hashedPassword]
         );
 
+        const userId = result.insertId;
+
+        // Generate JWT token
+        const token = generateToken({ id: userId, email, username });
+
         res.status(201).json({
             success: true,
             message: 'User registered successfully',
             data: {
-                id: result.insertId,
-                username,
-                email
+                user: {
+                    id: userId,
+                    username,
+                    email
+                },
+                token // Send token to client
             }
         });
 
@@ -97,12 +119,16 @@ exports.login = async (req, res) => {
         // Don't send password back
         delete user.password;
 
-        // TODO: Create session or JWT token here
+        // Generate JWT token
+        const token = generateToken(user);
 
         res.json({
             success: true,
             message: 'Login successful',
-            data: user
+            data: {
+                user,
+                token
+            }
         });
 
     } catch (error) {
@@ -117,9 +143,17 @@ exports.login = async (req, res) => {
 
 // POST logout
 exports.logout = async (req, res) => {
-    // TODO: Implement session/JWT logout
     res.json({
         success: true,
-        message: 'Logout successful'
+        message: 'Logout successful. Please delete the token on client side.'
+    });
+};
+
+// GET verify token (opcional - para verificar se token ainda é válido)
+exports.verifyToken = async (req, res) => {
+    res.json({
+        success: true,
+        message: 'Token is valid',
+        data: req.user
     });
 };

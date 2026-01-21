@@ -3,11 +3,11 @@ const db = require('../config/database');
 // GET user profile
 exports.getUserProfile = async (req, res) => {
     try {
-        const { id } = req.params;
+        const userId = req.user.id;
 
         const [users] = await db.query(
             `SELECT id, username, email, picture FROM users WHERE id = ?`,
-            [id]
+            [userId]
         );
 
         if (users.length === 0) {
@@ -35,10 +35,10 @@ exports.getUserProfile = async (req, res) => {
 // GET user's favorite recipes - OPTIMIZED
 exports.getUserFavorites = async (req, res) => {
     try {
-        const { id } = req.params;
+        const userId = req.user.id; // Get from JWT token
 
         const query = `
-            SELECT 
+            SELECT
                 r.id,
                 r.name,
                 r.picture,
@@ -48,17 +48,17 @@ exports.getUserFavorites = async (req, res) => {
                 c.name as country_name,
                 AVG(rn.note) as average_rating
             FROM user_favorites uf
-            JOIN recipes r ON uf.recipe_id = r.id
-            LEFT JOIN diets d ON r.diet_id = d.id
-            LEFT JOIN recipe_types rt ON r.type_id = rt.id
-            LEFT JOIN countries c ON r.country_id = c.id
-            LEFT JOIN recipe_notes rn ON r.id = rn.recipe_id
+                     JOIN recipes r ON uf.recipe_id = r.id
+                     LEFT JOIN diets d ON r.diet_id = d.id
+                     LEFT JOIN recipe_types rt ON r.type_id = rt.id
+                     LEFT JOIN countries c ON r.country_id = c.id
+                     LEFT JOIN recipe_notes rn ON r.id = rn.recipe_id
             WHERE uf.user_id = ?
             GROUP BY r.id, r.name, r.picture, r.description, d.name, rt.name, c.name
             ORDER BY r.name ASC
         `;
 
-        const [recipes] = await db.query(query, [id]);
+        const [recipes] = await db.query(query, [userId]);
 
         res.json({
             success: true,
@@ -79,10 +79,10 @@ exports.getUserFavorites = async (req, res) => {
 // GET user's shared recipes - OPTIMIZED
 exports.getUserShared = async (req, res) => {
     try {
-        const { id } = req.params;
+        const userId = req.user.id; // Get from JWT token
 
         const query = `
-            SELECT 
+            SELECT
                 r.id,
                 r.name,
                 r.picture,
@@ -92,17 +92,17 @@ exports.getUserShared = async (req, res) => {
                 c.name as country_name,
                 AVG(rn.note) as average_rating
             FROM user_shared us
-            JOIN recipes r ON us.recipe_id = r.id
-            LEFT JOIN diets d ON r.diet_id = d.id
-            LEFT JOIN recipe_types rt ON r.type_id = rt.id
-            LEFT JOIN countries c ON r.country_id = c.id
-            LEFT JOIN recipe_notes rn ON r.id = rn.recipe_id
+                     JOIN recipes r ON us.recipe_id = r.id
+                     LEFT JOIN diets d ON r.diet_id = d.id
+                     LEFT JOIN recipe_types rt ON r.type_id = rt.id
+                     LEFT JOIN countries c ON r.country_id = c.id
+                     LEFT JOIN recipe_notes rn ON r.id = rn.recipe_id
             WHERE us.user_id = ?
             GROUP BY r.id, r.name, r.picture, r.description, d.name, rt.name, c.name
             ORDER BY r.name ASC
         `;
 
-        const [recipes] = await db.query(query, [id]);
+        const [recipes] = await db.query(query, [userId]);
 
         res.json({
             success: true,
@@ -123,10 +123,10 @@ exports.getUserShared = async (req, res) => {
 // GET user's created recipes
 exports.getUserRecipes = async (req, res) => {
     try {
-        const { id } = req.params;
+        const userId = req.user.id;
 
         const query = `
-            SELECT 
+            SELECT
                 r.id,
                 r.name,
                 r.picture,
@@ -136,16 +136,16 @@ exports.getUserRecipes = async (req, res) => {
                 c.name as country_name,
                 AVG(rn.note) as average_rating
             FROM recipes r
-            LEFT JOIN diets d ON r.diet_id = d.id
-            LEFT JOIN recipe_types rt ON r.type_id = rt.id
-            LEFT JOIN countries c ON r.country_id = c.id
-            LEFT JOIN recipe_notes rn ON r.id = rn.recipe_id
+                     LEFT JOIN diets d ON r.diet_id = d.id
+                     LEFT JOIN recipe_types rt ON r.type_id = rt.id
+                     LEFT JOIN countries c ON r.country_id = c.id
+                     LEFT JOIN recipe_notes rn ON r.id = rn.recipe_id
             WHERE r.user_id = ?
             GROUP BY r.id, r.name, r.picture, r.description, d.name, rt.name, c.name
             ORDER BY r.name ASC
         `;
 
-        const [recipes] = await db.query(query, [id]);
+        const [recipes] = await db.query(query, [userId]);
 
         res.json({
             success: true,
@@ -166,7 +166,7 @@ exports.getUserRecipes = async (req, res) => {
 // PUT update user profile
 exports.updateUserProfile = async (req, res) => {
     try {
-        const { id } = req.params;
+        const userId = req.user.id; // Get from JWT token
         const { username, picture } = req.body;
 
         const updates = [];
@@ -189,7 +189,7 @@ exports.updateUserProfile = async (req, res) => {
             });
         }
 
-        values.push(id);
+        values.push(userId);
 
         await db.query(
             `UPDATE users SET ${updates.join(', ')} WHERE id = ?`,
