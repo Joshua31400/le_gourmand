@@ -1,29 +1,48 @@
-require('dotenv').config();
+require('dotenv').config({ path: __dirname + '/.env' });
 const express = require('express');
-const mysql = require('mysql2/promise');
+const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
+// Middleware
+app.use(cors());
 app.use(express.json());
 
-const dbPool = mysql.createPool({
-    host: 'TODO',
-    user: 'TODO',
-    password: 'TODO',
-    database: 'TODO',
+// Import routes
+const recipeRoutes = require('./routes/recipes');
+const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/users');
+
+// Use routes
+app.use('/api/recipes', recipeRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+
+// Health check route
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', message: 'API is running' });
 });
 
-dbPool.getConnection()
-    .then(connection => {
-        console.log('✅ Db connected successfully.');
-        connection.release();
-    })
-    .catch(err => {
-        console.error('❌ Error loading db:', err.message);
+// 404 handler
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        message: 'Route not found'
     });
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+    console.error('Server error:', err);
+    res.status(500).json({
+        success: false,
+        message: 'Internal server error',
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+});
 
 app.listen(PORT, () => {
-    console.log(`🚀 Server running in port: ${PORT}`);
+    console.log(`🚀 API Server running on port: ${PORT}`);
     console.log(`📍 http://localhost:${PORT}`);
 });
