@@ -3,6 +3,7 @@ function checkAuth() {
 
     if (!token) {
         window.location.href = '/signin';
+        return;
     }
 
     // Decode JWT to check expiration (simple check)
