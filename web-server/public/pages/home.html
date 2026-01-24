@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,7 @@
 <header>
     <nav>
         <ul>
-            <li><a href="profile.html">Profile</a></li>
+            <li><a href="/profile">Profile</a></li>
             <li><a href="#">Create recipes</a></li>
             <li><button>Logout</button></li>
         </ul>
@@ -20,43 +20,34 @@
 </header>
 
 <main>
-    <h1>Welcome to Le Gourmand {$name}</h1>
+    <h1>Welcome to Le Gourmand</h1>
+
     <section id="search-section">
-        <h1>Find a recipe</h1>
-        <form action="" method="get">
-            <input type="search" id="search" name="q" placeholder="Recipe, ingredient, country...">
+        <h2>Find a recipe</h2>
+        <form>
+            <input type="search" id="search" name="q" placeholder="Search by recipe name...">
             <button type="submit">Search</button>
         </form>
     </section>
 
     <section id="filters">
         <h2>Filter Recipes</h2>
-        <form action="" method="get">
+        <form>
             <fieldset>
                 <legend>Country:</legend>
-                <label><input type="checkbox" name="country" value="france"> France</label>
-                <label><input type="checkbox" name="country" value="italy"> Italy</label>
-                <label><input type="checkbox" name="country" value="japan"> Japan</label>
-                <label><input type="checkbox" name="country" value="germany"> Germany</label>
-                <label><input type="checkbox" name="country" value="russian"> Russian</label>
+                <!-- Loaded dynamically -->
             </fieldset>
             <fieldset>
                 <legend>Main Ingredient:</legend>
-                <label><input type="checkbox" name="ingredient" value="chicken"> Chicken</label>
-                <label><input type="checkbox" name="ingredient" value="beef"> Beef</label>
-                <label><input type="checkbox" name="ingredient" value="vegetables"> Vegetables</label>
+                <!-- Loaded dynamically -->
             </fieldset>
             <fieldset>
                 <legend>Meal Type:</legend>
-                <label><input type="checkbox" name="type" value="starter"> Starter</label>
-                <label><input type="checkbox" name="type" value="main"> Main Course</label>
-                <label><input type="checkbox" name="type" value="dessert"> Dessert</label>
+                <!-- Loaded dynamically -->
             </fieldset>
             <fieldset>
                 <legend>Diet:</legend>
-                <label><input type="checkbox" name="diet" value="vegetarian"> Vegetarian</label>
-                <label><input type="checkbox" name="diet" value="vegan"> Vegan</label>
-                <label><input type="checkbox" name="diet" value="gluten-free"> Gluten Free</label>
+                <!-- Loaded dynamically -->
             </fieldset>
             <button type="submit">Apply Filters</button>
         </form>
@@ -65,36 +56,17 @@
     <section id="recipes-list">
         <h3>All recipes</h3>
         <div class="recipes-grid">
-            <div class="recipes-grid">
-                <a href="recipes.html" class="recipe-card">
-                    <div class="card-header">
-                        <img src="..." alt="Recipe image">
-                        <span class="note-badge">4/5 ★</span>
-                    </div>
-                    <div class="card-content">
-                        <h4>Pasta Carbonara</h4>
-                        <p class="description">Classic Italian dish with eggs, cheese, bacon and black pepper.</p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="recipes-grid">
-                <a href="recipes.html" class="recipe-card">
-                    <div class="card-header">
-                        <img src="..." alt="Recipe image">
-                        <span class="note-badge">4/5 ★</span>
-                    </div>
-                    <div class="card-content">
-                        <h4>Pasta Carbonara</h4>
-                        <p class="description">Classic Italian dish with eggs, cheese, bacon and black pepper.</p>
-                    </div>
-                </a>
-            </div>
+            <!-- Recipes loaded dynamically -->
         </div>
     </section>
 </main>
+
 <footer>
     <p>&copy; 2026 Le Gourmand. All rights reserved.</p>
 </footer>
+
+<script src="/scripts/config.js"></script>
+<script src="/scripts/checkAuth.js"></script>
+<script src="/scripts/home.js"></script>
 </body>
 </html>

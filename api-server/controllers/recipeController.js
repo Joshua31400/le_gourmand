@@ -11,6 +11,7 @@ exports.getAllRecipes = async (req, res) => {
                 r.name,
                 r.picture,
                 r.description,
+                r.preparation,
                 d.name as diet_name,
                 rt.name as type_name,
                 c.name as country_name,
@@ -31,47 +32,47 @@ exports.getAllRecipes = async (req, res) => {
 
         const params = [];
 
-        // Search by name
+        // Search by name ONLY
         if (search) {
             query += ` AND r.name LIKE ?`;
             params.push(`%${search}%`);
         }
 
-        // Filter by diet
+        // Filter by diet (multiple values - OR logic)
         if (diet) {
-            query += ` AND r.diet_id = ?`;
-            params.push(diet);
+            const dietIds = diet.split(',').map(id => id.trim());
+            query += ` AND r.diet_id IN (${dietIds.map(() => '?').join(',')})`;
+            params.push(...dietIds);
         }
 
-        // Filter by type
+        // Filter by type (multiple values - OR logic)
         if (type) {
-            query += ` AND r.type_id = ?`;
-            params.push(type);
+            const typeIds = type.split(',').map(id => id.trim());
+            query += ` AND r.type_id IN (${typeIds.map(() => '?').join(',')})`;
+            params.push(...typeIds);
         }
 
-        // Filter by country
+        // Filter by country (multiple values - OR logic)
         if (country) {
-            query += ` AND r.country_id = ?`;
-            params.push(country);
+            const countryIds = country.split(',').map(id => id.trim());
+            query += ` AND r.country_id IN (${countryIds.map(() => '?').join(',')})`;
+            params.push(...countryIds);
         }
 
-        // Filter by ingredients
+        // Filter by ingredients (multiple values - OR logic)
         if (ingredients) {
             const ingredientIds = ingredients.split(',').map(id => id.trim());
 
-            // Find recipes that have ALL specified ingredients
             query += ` AND r.id IN (
-                SELECT rri3.recipe_id
+                SELECT DISTINCT rri3.recipe_id
                 FROM relation_recipe_ingredients rri3
                 WHERE rri3.ingredient_id IN (${ingredientIds.map(() => '?').join(',')})
-                GROUP BY rri3.recipe_id
-                HAVING COUNT(DISTINCT rri3.ingredient_id) = ?
             )`;
 
-            params.push(...ingredientIds, ingredientIds.length);
+            params.push(...ingredientIds);
         }
 
-        query += ` GROUP BY r.id, r.name, r.picture, r.description, d.name, rt.name, c.name`;
+        query += ` GROUP BY r.id, r.name, r.picture, r.description, r.preparation, d.name, rt.name, c.name`;
         query += ` ORDER BY r.name ASC`;
 
         const [recipes] = await db.query(query, params);
@@ -93,6 +94,7 @@ exports.getAllRecipes = async (req, res) => {
                 name: recipe.name,
                 picture: recipe.picture,
                 description: recipe.description,
+                preparation: recipe.preparation,
                 diet_name: recipe.diet_name,
                 type_name: recipe.type_name,
                 country_name: recipe.country_name,
