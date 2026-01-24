@@ -3,7 +3,7 @@ const db = require('../config/database');
 // GET user profile
 exports.getUserProfile = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.params.id; // Get from URL
 
         const [users] = await db.query(
             `SELECT id, username, email, picture FROM users WHERE id = ?`,
@@ -35,7 +35,7 @@ exports.getUserProfile = async (req, res) => {
 // GET user's favorite recipes - OPTIMIZED
 exports.getUserFavorites = async (req, res) => {
     try {
-        const userId = req.user.id; // Get from JWT token
+        const userId = req.params.id; // Get from URL
 
         const query = `
             SELECT
@@ -79,7 +79,7 @@ exports.getUserFavorites = async (req, res) => {
 // GET user's shared recipes - OPTIMIZED
 exports.getUserShared = async (req, res) => {
     try {
-        const userId = req.user.id; // Get from JWT token
+        const userId = req.params.id; // Get from URL
 
         const query = `
             SELECT
@@ -123,7 +123,7 @@ exports.getUserShared = async (req, res) => {
 // GET user's created recipes
 exports.getUserRecipes = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.params.id; // Get from URL
 
         const query = `
             SELECT
@@ -166,7 +166,17 @@ exports.getUserRecipes = async (req, res) => {
 // PUT update user profile
 exports.updateUserProfile = async (req, res) => {
     try {
-        const userId = req.user.id; // Get from JWT token
+        const userId = req.user.id; // Get from JWT token (can only update your own profile)
+        const requestedUserId = req.params.id; // Get from URL
+
+        // Security: user can only update their own profile
+        if (parseInt(userId) !== parseInt(requestedUserId)) {
+            return res.status(403).json({
+                success: false,
+                message: 'You can only update your own profile'
+            });
+        }
+
         const { username, picture } = req.body;
 
         const updates = [];

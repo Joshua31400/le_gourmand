@@ -565,3 +565,36 @@ exports.deleteRecipe = async (req, res) => {
         connection.release();
     }
 };
+
+// GET user's rating for a recipe
+exports.getMyRating = async (req, res) => {
+    try {
+        const { id } = req.params; // recipe_id
+        const user_id = req.user.id; // Get from JWT token
+
+        const [rating] = await db.query(
+            `SELECT note FROM recipe_notes WHERE user_id = ? AND recipe_id = ?`,
+            [user_id, id]
+        );
+
+        if (rating.length === 0) {
+            return res.json({
+                success: true,
+                data: { note: 0 } // User hasn't rated this recipe
+            });
+        }
+
+        res.json({
+            success: true,
+            data: { note: rating[0].note }
+        });
+
+    } catch (error) {
+        console.error('Error fetching user rating:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching rating',
+            error: error.message
+        });
+    }
+};
