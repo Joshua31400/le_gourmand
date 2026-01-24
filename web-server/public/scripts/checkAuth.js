@@ -3,7 +3,6 @@ function checkAuth() {
 
     if (!token) {
         window.location.href = '/signin';
-        return false;
     }
 
     // Decode JWT to check expiration (simple check)
@@ -16,15 +15,13 @@ function checkAuth() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = '/signin';
-            return false;
         }
     } catch (error) {
         // Invalid token format
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/signin';
-        return false;
     }
-
-    return true;
 }
+
+checkAuth();

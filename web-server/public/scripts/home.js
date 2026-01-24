@@ -244,11 +244,6 @@ function setupLogout() {
 
 // Initialize page
 async function init() {
-    // Check authentication first
-    if (!checkAuth()) {
-        return;
-    }
-
     // Display username
     displayUsername();
 
