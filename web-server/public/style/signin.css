@@ -1,0 +1,27 @@
+
+main {
+    justify-content: center;
+    width: 90%;
+    max-width: 400px;
+    background-color: var(--surface-color);
+    padding: 5rem;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    width: 100%;
+    font-size: var(--font-size-base);
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
