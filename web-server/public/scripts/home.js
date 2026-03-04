@@ -115,27 +115,22 @@ async function loadRecipes(filters = {}) {
     try {
         const queryParams = new URLSearchParams();
 
-        // Add search query
         if (filters.search) {
             queryParams.append('search', filters.search);
         }
 
-        // Add country filter (single value for now)
         if (filters.country) {
             queryParams.append('country', filters.country);
         }
 
-        // Add ingredients filter (comma-separated IDs)
-        if (filters.ingredients && filters.ingredients.length > 0) {
-            queryParams.append('ingredients', filters.ingredients.join(','));
+        if (filters.ingredients) {
+            queryParams.append('ingredients', filters.ingredients);
         }
 
-        // Add type filter
         if (filters.type) {
             queryParams.append('type', filters.type);
         }
 
-        // Add diet filter
         if (filters.diet) {
             queryParams.append('diet', filters.diet);
         }
@@ -150,7 +145,6 @@ async function loadRecipes(filters = {}) {
         if (data.success) {
             renderRecipes(data.data);
 
-            // Update recipes count
             const recipesSection = document.querySelector('#recipes-list h3');
             recipesSection.textContent = `All recipes (${data.count})`;
         }
@@ -174,7 +168,7 @@ function setupSearch() {
         if (searchQuery) {
             loadRecipes({ search: searchQuery });
         } else {
-            loadRecipes(); // Load all recipes if search is empty
+            loadRecipes();
         }
     });
 }
@@ -186,54 +180,47 @@ function setupFilters() {
     filtersForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        // Get ALL selected countries (multiple - OR logic)
         const selectedCountries = Array.from(
             document.querySelectorAll('input[name="country"]:checked')
         ).map(cb => cb.value);
 
-        // Get ALL selected ingredients (multiple - OR logic)
         const selectedIngredients = Array.from(
             document.querySelectorAll('input[name="ingredient"]:checked')
         ).map(cb => cb.value);
 
-        // Get ALL selected types (multiple - OR logic)
         const selectedTypes = Array.from(
             document.querySelectorAll('input[name="type"]:checked')
         ).map(cb => cb.value);
 
-        // Get ALL selected diets (multiple - OR logic)
         const selectedDiets = Array.from(
             document.querySelectorAll('input[name="diet"]:checked')
         ).map(cb => cb.value);
 
-        // Build filters object
         const filters = {};
 
-        // Send as comma-separated string (multiple values)
         if (selectedCountries.length > 0) {
-            filters.country = selectedCountries.join(','); // "1,2,3"
+            filters.country = selectedCountries.join(',');
         }
 
         if (selectedIngredients.length > 0) {
-            filters.ingredients = selectedIngredients.join(','); // "1,2,3"
+            filters.ingredients = selectedIngredients.join(',');
         }
 
         if (selectedTypes.length > 0) {
-            filters.type = selectedTypes.join(','); // "1,2"
+            filters.type = selectedTypes.join(',');
         }
 
         if (selectedDiets.length > 0) {
-            filters.diet = selectedDiets.join(','); // "1,2"
+            filters.diet = selectedDiets.join(',');
         }
 
-        // Load recipes with filters
         loadRecipes(filters);
     });
 }
 
 // Setup logout button
 function setupLogout() {
-    const logoutBtn = document.querySelector('nav button');
+    const logoutBtn = document.getElementById('logoutBtn');
 
     logoutBtn.addEventListener('click', () => {
         localStorage.removeItem('token');
@@ -244,22 +231,11 @@ function setupLogout() {
 
 // Initialize page
 async function init() {
-    // Display username
     displayUsername();
-
-    // Setup logout
     setupLogout();
-
-    // Load filter options from API
     await loadFilterOptions();
-
-    // Load all recipes initially
     await loadRecipes();
-
-    // Setup search functionality
     setupSearch();
-
-    // Setup filters functionality
     setupFilters();
 }
 

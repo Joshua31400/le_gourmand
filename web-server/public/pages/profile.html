@@ -7,19 +7,21 @@
     <link rel="stylesheet" href="../style/root.css">
     <link rel="stylesheet" href="../style/profile.css">
     <link rel="stylesheet" href="../style/card.css">
+    <link rel="stylesheet" href="../style/create_recipe_modal.css">
 </head>
 <body>
 <header>
     <nav>
         <ul>
             <li><a href="/home">Home</a></li>
-            <li><a href="/profile">My Profile</a></li>
+            <li><a href="#" id="createRecipeBtn">Create recipes</a></li>
             <li><button id="logoutBtn">Logout</button></li>
         </ul>
     </nav>
 </header>
 
 <main>
+    <!-- User Info Section -->
     <section id="user-info">
         <img src="https://via.placeholder.com/64" alt="User picture" id="user-picture">
         <div>
@@ -29,22 +31,26 @@
         </div>
     </section>
 
+    <!-- Favorites Section -->
     <section id="favorites">
         <h2>Favorite Recipes (<span id="favorites-count">0</span>)</h2>
         <div id="favorites-grid" class="recipes-grid"></div>
     </section>
 
+    <!-- Shared Section -->
     <section id="shared">
         <h2>Shared Recipes (<span id="shared-count">0</span>)</h2>
         <div id="shared-grid" class="recipes-grid"></div>
     </section>
 
+    <!-- My Recipes Section -->
     <section id="my-recipes">
         <h2>My Recipes (<span id="recipes-count">0</span>)</h2>
         <div id="recipes-grid" class="recipes-grid"></div>
     </section>
 </main>
 
+<!-- Edit Profile Modal -->
 <div id="editProfileModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
@@ -68,6 +74,81 @@
     </div>
 </div>
 
+<!-- Create Recipe Modal -->
+<div id="createRecipeModal" class="modal">
+    <div class="modal-content modal-large">
+        <span class="close">&times;</span>
+        <h2>Create New Recipe</h2>
+        <form id="createRecipeForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="recipeName">Recipe Name: *</label>
+                    <input type="text" id="recipeName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipeImage">Recipe Image:</label>
+                    <input type="file" id="recipeImage" accept="image/jpeg,image/jpg,image/png,image/gif">
+                    <small>Max 5MB. Formats: JPG, PNG, GIF</small>
+                    <p id="recipeFileName"></p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="recipeDescription">Description: *</label>
+                <textarea id="recipeDescription" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="recipePreparation">Preparation Steps: *</label>
+                <textarea id="recipePreparation" rows="6" required placeholder="Enter each step on a new line"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="recipeType">Meal Type: *</label>
+                    <select id="recipeType" required>
+                        <option value="">Select type...</option>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipeDiet">Diet: *</label>
+                    <select id="recipeDiet" required>
+                        <option value="">Select diet...</option>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipeCountry">Country: *</label>
+                    <select id="recipeCountry" required>
+                        <option value="">Select country...</option>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="recipeIngredients">Ingredients: *</label>
+                <select id="recipeIngredients">
+                    <option value="">Select ingredients...</option>
+                    <!-- Loaded dynamically -->
+                </select>
+                <small>Select an ingredient to add it to your recipe</small>
+
+                <div id="selectedIngredients" class="chips-container">
+                    <!-- Selected ingredients appear here as chips -->
+                </div>
+            </div>
+
+            <button type="submit">Create Recipe</button>
+        </form>
+        <div id="createMessage"></div>
+    </div>
+</div>
+
 <footer>
     <p>&copy; 2026 Le Gourmand. All rights reserved.</p>
 </footer>
@@ -75,5 +156,6 @@
 <script src="/scripts/config.js"></script>
 <script src="/scripts/checkAuth.js"></script>
 <script src="/scripts/profile.js"></script>
+<script src="/scripts/create_recipe.js"></script>
 </body>
 </html>

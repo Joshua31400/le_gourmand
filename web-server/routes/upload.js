@@ -10,7 +10,7 @@ router.post('/upload-image', upload.single('picture'), (req, res) => {
         });
     }
 
-    const folder = req.body.folder || 'profile';
+    const folder = req.query.folder || 'profile';
 
     res.json({
         success: true,

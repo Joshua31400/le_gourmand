@@ -212,3 +212,14 @@
 #fileName:empty {
     display: none;
 }
+
+button {
+    cursor: pointer;
+    transition: background 0.3s;
+    color: var(--surface-color);
+    background: var(--primary-color);
+}
+
+button:hover {
+    background: var(--accent-color);
+}

@@ -314,7 +314,7 @@ async function handleEditProfile(e) {
     const userId = getUserIdFromUrl();
     const token = localStorage.getItem('token');
     const messageDiv = document.getElementById('editMessage');
-    const submitBtn = e.target.querySelector('button[type="submit"]'); // Pega o botão submit
+    const submitBtn = e.target.querySelector('button[type="submit"]');
 
     submitBtn.disabled = true;
     const originalBtnText = submitBtn.textContent;
@@ -326,14 +326,14 @@ async function handleEditProfile(e) {
     let picturePath = null;
 
     try {
+        // 1. If there's an image, upload it first
         if (pictureInput.files.length > 0) {
             submitBtn.textContent = 'Uploading image...';
 
             const formData = new FormData();
             formData.append('picture', pictureInput.files[0]);
-            formData.append('folder', 'profile');
 
-            const uploadRes = await fetch('/upload-image', {
+            const uploadRes = await fetch('/upload-image?folder=profile', {
                 method: 'POST',
                 body: formData
             });
@@ -357,7 +357,6 @@ async function handleEditProfile(e) {
             messageDiv.className = 'error';
             messageDiv.textContent = 'Nothing to update';
             messageDiv.style.display = 'block';
-
             submitBtn.disabled = false;
             submitBtn.textContent = originalBtnText;
             return;
@@ -396,7 +395,6 @@ async function handleEditProfile(e) {
             messageDiv.className = 'error';
             messageDiv.textContent = 'Error: ' + data.message;
             messageDiv.style.display = 'block';
-
             submitBtn.disabled = false;
             submitBtn.textContent = originalBtnText;
         }
@@ -405,8 +403,6 @@ async function handleEditProfile(e) {
         messageDiv.className = 'error';
         messageDiv.textContent = 'Error updating profile';
         messageDiv.style.display = 'block';
-
-        // Reabilita botão em caso de erro
         submitBtn.disabled = false;
         submitBtn.textContent = originalBtnText;
     }
