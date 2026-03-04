@@ -24,33 +24,55 @@
     <h1>Welcome to Le Gourmand</h1>
 
     <section id="search-section">
-        <h2>Find a recipe</h2>
-        <form>
-            <input type="search" id="search" name="q" placeholder="Search by recipe name...">
-            <button type="submit">Search</button>
+        <h2>Search Recipes</h2>
+        <form id="searchForm">
+            <div class="search-input-group">
+                <input type="search" id="search" name="q" placeholder="Search by recipe name...">
+                <button type="submit" class="search-btn">Search</button>
+                <button type="button" id="clearSearchBtn" class="clear-btn">Clear Search</button>
+            </div>
         </form>
     </section>
 
     <section id="filters">
-        <h2>Filter Recipes</h2>
-        <form>
-            <fieldset>
-                <legend>Country:</legend>
-                <!-- Loaded dynamically -->
-            </fieldset>
-            <fieldset>
-                <legend>Main Ingredient:</legend>
-                <!-- Loaded dynamically -->
-            </fieldset>
-            <fieldset>
-                <legend>Meal Type:</legend>
-                <!-- Loaded dynamically -->
-            </fieldset>
-            <fieldset>
-                <legend>Diet:</legend>
-                <!-- Loaded dynamically -->
-            </fieldset>
-        </form>
+        <h2>Filters</h2>
+        <div class="filters-container">
+            <div class="filter-group">
+                <label for="countrySelect">Countries:</label>
+                <select id="countrySelect">
+                    <option value="">Select countries...</option>
+                    <!-- Loaded dynamically -->
+                </select>
+                <div id="countryChips" class="chips-container"></div>
+            </div>
+
+            <div class="filter-group">
+                <label for="ingredientSelect">Ingredients:</label>
+                <select id="ingredientSelect">
+                    <option value="">Select ingredients...</option>
+                    <!-- Loaded dynamically -->
+                </select>
+                <div id="ingredientChips" class="chips-container"></div>
+            </div>
+
+            <div class="filter-group">
+                <label for="typeSelect">Meal Types:</label>
+                <select id="typeSelect">
+                    <option value="">Select types...</option>
+                    <!-- Loaded dynamically -->
+                </select>
+                <div id="typeChips" class="chips-container"></div>
+            </div>
+
+            <div class="filter-group">
+                <label for="dietSelect">Diets:</label>
+                <select id="dietSelect">
+                    <option value="">Select diets...</option>
+                    <!-- Loaded dynamically -->
+                </select>
+                <div id="dietChips" class="chips-container"></div>
+            </div>
+        </div>
     </section>
 
     <section id="recipes-list">
@@ -96,7 +118,6 @@
                     <label for="recipeType">Meal Type: *</label>
                     <select id="recipeType" required>
                         <option value="">Select type...</option>
-                        <!-- Loaded dynamically -->
                     </select>
                 </div>
 
@@ -104,7 +125,6 @@
                     <label for="recipeDiet">Diet: *</label>
                     <select id="recipeDiet" required>
                         <option value="">Select diet...</option>
-                        <!-- Loaded dynamically -->
                     </select>
                 </div>
 
@@ -112,7 +132,6 @@
                     <label for="recipeCountry">Country: *</label>
                     <select id="recipeCountry" required>
                         <option value="">Select country...</option>
-                        <!-- Loaded dynamically -->
                     </select>
                 </div>
             </div>
@@ -121,13 +140,10 @@
                 <label for="recipeIngredients">Ingredients: *</label>
                 <select id="recipeIngredients">
                     <option value="">Select ingredients...</option>
-                    <!-- Loaded dynamically -->
                 </select>
                 <small>Select an ingredient to add it to your recipe</small>
 
-                <div id="selectedIngredients" class="chips-container">
-                    <!-- Selected ingredients appear here as chips -->
-                </div>
+                <div id="selectedIngredients" class="chips-container"></div>
             </div>
 
             <button type="submit">Create Recipe</button>
