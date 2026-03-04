@@ -67,7 +67,7 @@
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #ddd;
-    border-radius: var(--button-radius);
+    border-radius: 1rem;
     font-size: 1rem;
     background-color: var(--surface-color);
     color: var(--text-color);
