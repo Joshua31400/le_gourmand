@@ -13,12 +13,18 @@
     height: 64px;
     object-fit: cover;
     margin-right: 1.5rem;
-    border-radius: var(--button-radius);
+    border-radius: 50%;
 }
 
 #username {
     font-weight: bold;
     font-size: var(--font-size-large);
+    margin: 0;
+}
+
+#user-email {
+    margin: 0.5rem 0 0 0;
+    color: var(--text-muted, #888);
 }
 
 #favorites {
@@ -42,4 +48,167 @@
     background-color: var(--secondary-color);
     padding: var(--page-padding);
     border-radius: var(--page-radius);
+}
+
+.recipes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.recipe-card-wrapper {
+    position: relative;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--button-radius);
+    cursor: pointer;
+    font-size: 0.9rem;
+    z-index: 10;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: var(--secondary-color);
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: var(--page-radius);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.close:hover,
+.close:focus {
+    color: var(--primary-color);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--surface-color);
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: var(--button-radius);
+    font-size: 1rem;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.25rem;
+    color: #888;
+    font-size: 0.85rem;
+}
+
+#editProfileForm button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--button-radius);
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+#editProfileForm button:hover {
+    background-color: var(--accent-color);
+}
+
+#editMessage {
+    padding: 0.75rem;
+    border-radius: var(--button-radius);
+    display: none;
+    margin-top: 1rem;
+}
+
+#editMessage.success {
+    display: block;
+    background-color: #d4edda;
+    color: #155724;
+}
+
+#editMessage.error {
+    display: block;
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+#editProfileBtn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--button-radius);
+    cursor: pointer;
+}
+
+#editProfileBtn:hover {
+    background-color: var(--accent-color);
+}
+
+#editProfileForm button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+#fileName {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+#fileName:empty {
+    display: none;
 }

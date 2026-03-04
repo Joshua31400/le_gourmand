@@ -13,9 +13,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Import routes
 const pageRoutes = require('./routes/pages');
+const uploadRoutes = require('./routes/upload');
 
 // Use routes
 app.use('/', pageRoutes);
+app.use('/', uploadRoutes);
 
 // 404 handler
 app.use((req, res) => {
