@@ -1,3 +1,12 @@
+// Filter state
+const filterState = {
+    search: '',
+    countries: [],
+    ingredients: [],
+    types: [],
+    diets: []
+};
+
 // Display username in welcome message
 function displayUsername() {
     const userStr = localStorage.getItem('user');
@@ -5,6 +14,30 @@ function displayUsername() {
         const user = JSON.parse(userStr);
         const welcomeTitle = document.querySelector('main h1');
         welcomeTitle.textContent = `Welcome to Le Gourmand, ${user.username}!`;
+    }
+}
+
+// Save filters to localStorage
+function saveFilters() {
+    localStorage.setItem('recipeFilters', JSON.stringify(filterState));
+}
+
+// Load filters from localStorage
+function loadSavedFilters() {
+    const saved = localStorage.getItem('recipeFilters');
+    if (saved) {
+        const parsed = JSON.parse(saved);
+        filterState.search = parsed.search || '';
+        filterState.countries = parsed.countries || [];
+        filterState.ingredients = parsed.ingredients || [];
+        filterState.types = parsed.types || [];
+        filterState.diets = parsed.diets || [];
+
+        // Update search input
+        document.getElementById('search').value = filterState.search;
+
+        // Render chips
+        renderFilterChips();
     }
 }
 
@@ -16,13 +49,9 @@ async function loadFilterOptions() {
         const countriesData = await countriesRes.json();
 
         if (countriesData.success) {
-            const countryFieldset = document.querySelector('fieldset:nth-of-type(1)');
-            countryFieldset.innerHTML = '<legend>Country:</legend>';
-
+            const countrySelect = document.getElementById('countrySelect');
             countriesData.data.forEach(country => {
-                countryFieldset.innerHTML += `
-                    <label><input type="checkbox" name="country" value="${country.id}"> ${country.name}</label>
-                `;
+                countrySelect.innerHTML += `<option value="${country.id}">${country.name}</option>`;
             });
         }
 
@@ -31,13 +60,9 @@ async function loadFilterOptions() {
         const ingredientsData = await ingredientsRes.json();
 
         if (ingredientsData.success) {
-            const ingredientFieldset = document.querySelector('fieldset:nth-of-type(2)');
-            ingredientFieldset.innerHTML = '<legend>Main Ingredient:</legend>';
-
+            const ingredientSelect = document.getElementById('ingredientSelect');
             ingredientsData.data.forEach(ingredient => {
-                ingredientFieldset.innerHTML += `
-                    <label><input type="checkbox" name="ingredient" value="${ingredient.id}"> ${ingredient.name}</label>
-                `;
+                ingredientSelect.innerHTML += `<option value="${ingredient.id}">${ingredient.name}</option>`;
             });
         }
 
@@ -46,13 +71,9 @@ async function loadFilterOptions() {
         const typesData = await typesRes.json();
 
         if (typesData.success) {
-            const typeFieldset = document.querySelector('fieldset:nth-of-type(3)');
-            typeFieldset.innerHTML = '<legend>Meal Type:</legend>';
-
+            const typeSelect = document.getElementById('typeSelect');
             typesData.data.forEach(type => {
-                typeFieldset.innerHTML += `
-                    <label><input type="checkbox" name="type" value="${type.id}"> ${type.name}</label>
-                `;
+                typeSelect.innerHTML += `<option value="${type.id}">${type.name}</option>`;
             });
         }
 
@@ -61,19 +82,99 @@ async function loadFilterOptions() {
         const dietsData = await dietsRes.json();
 
         if (dietsData.success) {
-            const dietFieldset = document.querySelector('fieldset:nth-of-type(4)');
-            dietFieldset.innerHTML = '<legend>Diet:</legend>';
-
+            const dietSelect = document.getElementById('dietSelect');
             dietsData.data.forEach(diet => {
-                dietFieldset.innerHTML += `
-                    <label><input type="checkbox" name="diet" value="${diet.id}"> ${diet.name}</label>
-                `;
+                dietSelect.innerHTML += `<option value="${diet.id}">${diet.name}</option>`;
             });
         }
     } catch (error) {
         console.error('Error loading filter options:', error);
     }
 }
+
+// Handle select changes
+function setupFilterSelects() {
+    document.getElementById('countrySelect').addEventListener('change', (e) => {
+        handleFilterSelection(e, 'countries', 'countryChips');
+    });
+
+    document.getElementById('ingredientSelect').addEventListener('change', (e) => {
+        handleFilterSelection(e, 'ingredients', 'ingredientChips');
+    });
+
+    document.getElementById('typeSelect').addEventListener('change', (e) => {
+        handleFilterSelection(e, 'types', 'typeChips');
+    });
+
+    document.getElementById('dietSelect').addEventListener('change', (e) => {
+        handleFilterSelection(e, 'diets', 'dietChips');
+    });
+}
+
+// Handle filter selection
+function handleFilterSelection(e, filterKey, chipsContainerId) {
+    const select = e.target;
+    const selectedId = select.value;
+    const selectedText = select.options[select.selectedIndex].text;
+
+    if (!selectedId) return;
+
+    // Check if already added
+    if (filterState[filterKey].some(item => item.id === selectedId)) {
+        alert('This filter is already added');
+        select.value = '';
+        return;
+    }
+
+    // Add to filter state
+    filterState[filterKey].push({ id: selectedId, name: selectedText });
+
+    // Reset select
+    select.value = '';
+
+    // Render chips
+    renderFilterChips();
+
+    // Save and search
+    saveFilters();
+    performSearch();
+}
+
+// Render all filter chips
+function renderFilterChips() {
+    renderChips('countries', 'countryChips');
+    renderChips('ingredients', 'ingredientChips');
+    renderChips('types', 'typeChips');
+    renderChips('diets', 'dietChips');
+}
+
+// Render chips for a specific filter
+function renderChips(filterKey, containerId) {
+    const container = document.getElementById(containerId);
+
+    if (filterState[filterKey].length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+
+    container.innerHTML = filterState[filterKey].map(item => `
+        <div class="chip">
+            <span>${item.name}</span>
+            <button type="button" class="chip-remove" onclick="removeFilter('${filterKey}', '${item.id}')">×</button>
+        </div>
+    `).join('');
+}
+
+// Remove filter
+function removeFilter(filterKey, itemId) {
+    filterState[filterKey] = filterState[filterKey].filter(item => item.id !== itemId);
+    renderFilterChips();
+    saveFilters();
+    performSearch();
+}
+
+// Make removeFilter available globally
+window.removeFilter = removeFilter;
 
 // Render recipes in the grid
 function renderRecipes(recipes) {
@@ -110,34 +211,34 @@ function renderRecipes(recipes) {
     });
 }
 
-// Load recipes with optional filters
-async function loadRecipes(filters = {}) {
+// Load recipes with current filters
+async function loadRecipes() {
     try {
         const queryParams = new URLSearchParams();
 
-        // Add search query
-        if (filters.search) {
-            queryParams.append('search', filters.search);
+        // Add search
+        if (filterState.search) {
+            queryParams.append('search', filterState.search);
         }
 
-        // Add country filter (single value for now)
-        if (filters.country) {
-            queryParams.append('country', filters.country);
+        // Add country filters
+        if (filterState.countries.length > 0) {
+            queryParams.append('country', filterState.countries.map(c => c.id).join(','));
         }
 
-        // Add ingredients filter (comma-separated IDs)
-        if (filters.ingredients && filters.ingredients.length > 0) {
-            queryParams.append('ingredients', filters.ingredients.join(','));
+        // Add ingredient filters
+        if (filterState.ingredients.length > 0) {
+            queryParams.append('ingredients', filterState.ingredients.map(i => i.id).join(','));
         }
 
-        // Add type filter
-        if (filters.type) {
-            queryParams.append('type', filters.type);
+        // Add type filters
+        if (filterState.types.length > 0) {
+            queryParams.append('type', filterState.types.map(t => t.id).join(','));
         }
 
-        // Add diet filter
-        if (filters.diet) {
-            queryParams.append('diet', filters.diet);
+        // Add diet filters
+        if (filterState.diets.length > 0) {
+            queryParams.append('diet', filterState.diets.map(d => d.id).join(','));
         }
 
         const url = queryParams.toString()
@@ -150,7 +251,6 @@ async function loadRecipes(filters = {}) {
         if (data.success) {
             renderRecipes(data.data);
 
-            // Update recipes count
             const recipesSection = document.querySelector('#recipes-list h3');
             recipesSection.textContent = `All recipes (${data.count})`;
         }
@@ -161,79 +261,49 @@ async function loadRecipes(filters = {}) {
     }
 }
 
+// Perform search
+function performSearch() {
+    loadRecipes();
+}
+
 // Handle search form submission
 function setupSearch() {
-    const searchForm = document.querySelector('#search-section form');
+    const searchForm = document.getElementById('searchForm');
 
     searchForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
         const searchInput = document.getElementById('search');
-        const searchQuery = searchInput.value.trim();
+        filterState.search = searchInput.value.trim();
 
-        if (searchQuery) {
-            loadRecipes({ search: searchQuery });
-        } else {
-            loadRecipes(); // Load all recipes if search is empty
-        }
+        saveFilters();
+        performSearch();
     });
 }
 
-// Handle filters form submission
-function setupFilters() {
-    const filtersForm = document.querySelector('#filters form');
+// Clear all filters and search
+function clearSearch() {
+    filterState.search = '';
+    filterState.countries = [];
+    filterState.ingredients = [];
+    filterState.types = [];
+    filterState.diets = [];
 
-    filtersForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+    document.getElementById('search').value = '';
 
-        // Get ALL selected countries (multiple - OR logic)
-        const selectedCountries = Array.from(
-            document.querySelectorAll('input[name="country"]:checked')
-        ).map(cb => cb.value);
+    renderFilterChips();
+    saveFilters();
+    performSearch();
+}
 
-        // Get ALL selected ingredients (multiple - OR logic)
-        const selectedIngredients = Array.from(
-            document.querySelectorAll('input[name="ingredient"]:checked')
-        ).map(cb => cb.value);
-
-        // Get ALL selected types (multiple - OR logic)
-        const selectedTypes = Array.from(
-            document.querySelectorAll('input[name="type"]:checked')
-        ).map(cb => cb.value);
-
-        // Get ALL selected diets (multiple - OR logic)
-        const selectedDiets = Array.from(
-            document.querySelectorAll('input[name="diet"]:checked')
-        ).map(cb => cb.value);
-
-        // Build filters object
-        const filters = {};
-
-        // Send as comma-separated string (multiple values)
-        if (selectedCountries.length > 0) {
-            filters.country = selectedCountries.join(','); // "1,2,3"
-        }
-
-        if (selectedIngredients.length > 0) {
-            filters.ingredients = selectedIngredients.join(','); // "1,2,3"
-        }
-
-        if (selectedTypes.length > 0) {
-            filters.type = selectedTypes.join(','); // "1,2"
-        }
-
-        if (selectedDiets.length > 0) {
-            filters.diet = selectedDiets.join(','); // "1,2"
-        }
-
-        // Load recipes with filters
-        loadRecipes(filters);
-    });
+// Setup clear search button
+function setupClearSearch() {
+    document.getElementById('clearSearchBtn').addEventListener('click', clearSearch);
 }
 
 // Setup logout button
 function setupLogout() {
-    const logoutBtn = document.querySelector('nav button');
+    const logoutBtn = document.getElementById('logoutBtn');
 
     logoutBtn.addEventListener('click', () => {
         localStorage.removeItem('token');
@@ -244,23 +314,14 @@ function setupLogout() {
 
 // Initialize page
 async function init() {
-    // Display username
     displayUsername();
-
-    // Setup logout
     setupLogout();
-
-    // Load filter options from API
     await loadFilterOptions();
-
-    // Load all recipes initially
-    await loadRecipes();
-
-    // Setup search functionality
+    loadSavedFilters(); // Load saved filters first
+    setupFilterSelects();
     setupSearch();
-
-    // Setup filters functionality
-    setupFilters();
+    setupClearSearch();
+    await loadRecipes(); // Then load recipes with those filters
 }
 
 // Run when page loads
