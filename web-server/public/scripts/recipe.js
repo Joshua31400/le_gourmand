@@ -36,7 +36,7 @@ function renderRecipe(recipe) {
     const headerTitle  = document.querySelector('.recipe-hero h1');
     const headerRating = document.querySelector('.recipe-hero .score');
 
-    headerImg.src = recipe.picture || 'https://via.placeholder.com/300x200?text=No+Image';
+    headerImg.src = recipe.picture;
     headerImg.alt = recipe.name;
     headerTitle.textContent = recipe.name;
 
