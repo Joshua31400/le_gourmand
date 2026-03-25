@@ -26,9 +26,10 @@ main {
     background: var(--clr-surface);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
+    margin-bottom: 10rem;
+    margin-top: 10rem;
     padding: 2.75rem 2.25rem 2rem;
     border: 1px solid rgba(26,23,20,.04);
-
     animation: fadeUp var(--dur-md) var(--ease) both;
 }
 
