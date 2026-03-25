@@ -9,23 +9,26 @@
 </head>
 <body>
 <main>
-    <h1>Sign In</h1>
+    <h1>Welcome back</h1>
+    <p class="auth-subtitle">Sign in to your Le Gourmand account</p>
+
     <form action="" method="post">
         <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Your username" required>
         </div>
         <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
         </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <button type="submit">Sign in </button>
+        <button type="submit">Sign In</button>
     </form>
+
+    <p class="auth-footer">
+        Don't have an account? <a href="signup.html">Sign up</a>
+    </p>
 </main>
+
 <footer>
     <p>&copy; 2026 Le Gourmand. All rights reserved.</p>
 </footer>

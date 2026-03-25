@@ -1,45 +1,90 @@
+/* ============================================================
+   PROFILE PAGE
+   ============================================================ */
+
+/* ─── USER INFO HERO ─────────────────────────────────────── */
 #user-info {
     display: flex;
     align-items: center;
+    gap: 1.5rem;
+    background: var(--clr-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 1.75rem var(--pad-x);
     margin-bottom: 2rem;
-    color: var(--surface-color);
-    background-color: var(--secondary-color);
-    padding: var(--page-padding);
-    border-radius: var(--page-radius);
+    border: 1px solid rgba(26,23,20,.04);
 }
 
+/* avatar circulaire avec ring */
 #user-info img {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
     object-fit: cover;
-    margin-right: 1.5rem;
-    border-radius: var(--button-radius);
+    border-radius: 50%;
+    border: 3px solid var(--clr-accent-pale);
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    gap: .15rem;
 }
 
 #username {
-    font-weight: bold;
-    font-size: var(--font-size-large);
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semi);
+    color: var(--clr-dark);
 }
 
-#favorites {
-    margin-bottom: 2rem;
-    color: var(--surface-color);
-    background-color: var(--secondary-color);
-    padding: var(--page-padding);
-    border-radius: var(--page-radius);
+.user-meta {
+    font-size: var(--text-sm);
+    color: var(--clr-muted);
 }
 
-#shared {
-    margin-bottom: 2rem;
-    color: var(--surface-color);
-    background-color: var(--secondary-color);
-    padding: var(--page-padding);
-    border-radius: var(--page-radius);
-}
-
+/* ─── SECTIONS PROFIL ────────────────────────────────────── */
+#favorites,
+#shared,
 #my-recipes {
-    color: var(--surface-color);
-    background-color: var(--secondary-color);
-    padding: var(--page-padding);
-    border-radius: var(--page-radius);
+    background: var(--clr-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 1.5rem var(--pad-x) 1.75rem;
+    margin-bottom: 1.75rem;
+    border: 1px solid rgba(26,23,20,.04);
+
+    animation: fadeUp var(--dur-md) var(--ease) both;
+}
+
+#favorites { animation-delay: .08s; }
+#shared    { animation-delay: .16s; }
+#my-recipes{ animation-delay: .24s; }
+
+#favorites h2,
+#shared h2,
+#my-recipes h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semi);
+    color: var(--clr-dark);
+    margin-bottom: .15rem;
+}
+
+.section-subtitle {
+    font-size: var(--text-sm);
+    color: var(--clr-muted);
+    margin-bottom: .75rem;
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 480px) {
+    #user-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    .user-details {
+        align-items: center;
+    }
 }

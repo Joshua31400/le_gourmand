@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,48 +12,56 @@
 <header>
     <nav>
         <ul>
+            <li><a href="home.html" class="nav-active">Home</a></li>
             <li><a href="profile.html">Profile</a></li>
-            <li><a href="#">Create recipes</a></li>
+            <li><a href="#">Create recipe</a></li>
             <li><button>Logout</button></li>
         </ul>
     </nav>
 </header>
 
 <main>
-    <h1>Welcome to Le Gourmand {$name}</h1>
+    <!-- Un seul h1 par page -->
+    <div id="page-heading">
+        <h1>Welcome back, {$name}</h1>
+        <p>Discover, save, and share your favourite recipes</p>
+    </div>
+
+    <!-- SEARCH -->
     <section id="search-section">
-        <h1>Find a recipe</h1>
+        <h2>Find a recipe</h2>
         <form action="" method="get">
-            <input type="search" id="search" name="q" placeholder="Recipe, ingredient, country...">
+            <input type="search" id="search" name="q" placeholder="Recipe, ingredient, country…">
             <button type="submit">Search</button>
         </form>
     </section>
 
+    <!-- FILTERS -->
     <section id="filters">
         <h2>Filter Recipes</h2>
         <form action="" method="get">
             <fieldset>
-                <legend>Country:</legend>
+                <legend>Country</legend>
                 <label><input type="checkbox" name="country" value="france"> France</label>
                 <label><input type="checkbox" name="country" value="italy"> Italy</label>
                 <label><input type="checkbox" name="country" value="japan"> Japan</label>
                 <label><input type="checkbox" name="country" value="germany"> Germany</label>
-                <label><input type="checkbox" name="country" value="russian"> Russian</label>
+                <label><input type="checkbox" name="country" value="russia"> Russia</label>
             </fieldset>
             <fieldset>
-                <legend>Main Ingredient:</legend>
+                <legend>Main Ingredient</legend>
                 <label><input type="checkbox" name="ingredient" value="chicken"> Chicken</label>
                 <label><input type="checkbox" name="ingredient" value="beef"> Beef</label>
                 <label><input type="checkbox" name="ingredient" value="vegetables"> Vegetables</label>
             </fieldset>
             <fieldset>
-                <legend>Meal Type:</legend>
+                <legend>Meal Type</legend>
                 <label><input type="checkbox" name="type" value="starter"> Starter</label>
                 <label><input type="checkbox" name="type" value="main"> Main Course</label>
                 <label><input type="checkbox" name="type" value="dessert"> Dessert</label>
             </fieldset>
             <fieldset>
-                <legend>Diet:</legend>
+                <legend>Diet</legend>
                 <label><input type="checkbox" name="diet" value="vegetarian"> Vegetarian</label>
                 <label><input type="checkbox" name="diet" value="vegan"> Vegan</label>
                 <label><input type="checkbox" name="diet" value="gluten-free"> Gluten Free</label>
@@ -62,37 +70,47 @@
         </form>
     </section>
 
+    <!-- RECIPES LIST — plus de div.recipes-grid imbriqué -->
     <section id="recipes-list">
         <h3>All recipes</h3>
+        <p class="panel-subtitle">Showing all available recipes</p>
         <div class="recipes-grid">
-            <div class="recipes-grid">
-                <a href="recipes.html" class="recipe-card">
-                    <div class="card-header">
-                        <img src="..." alt="Recipe image">
-                        <span class="note-badge">4/5 ★</span>
-                    </div>
-                    <div class="card-content">
-                        <h4>Pasta Carbonara</h4>
-                        <p class="description">Classic Italian dish with eggs, cheese, bacon and black pepper.</p>
-                    </div>
-                </a>
-            </div>
+            <a href="recipes.html" class="recipe-card">
+                <div class="card-header">
+                    <img src="..." alt="Pasta Carbonara">
+                    <span class="note-badge">4 / 5</span>
+                </div>
+                <div class="card-content">
+                    <h4>Pasta Carbonara</h4>
+                    <p class="description">Classic Italian dish with eggs, cheese, bacon and black pepper.</p>
+                </div>
+            </a>
 
-            <div class="recipes-grid">
-                <a href="recipes.html" class="recipe-card">
-                    <div class="card-header">
-                        <img src="..." alt="Recipe image">
-                        <span class="note-badge">4/5 ★</span>
-                    </div>
-                    <div class="card-content">
-                        <h4>Pasta Carbonara</h4>
-                        <p class="description">Classic Italian dish with eggs, cheese, bacon and black pepper.</p>
-                    </div>
-                </a>
-            </div>
+            <a href="recipes.html" class="recipe-card">
+                <div class="card-header">
+                    <img src="..." alt="Beef Bourguignon">
+                    <span class="note-badge">4.5 / 5</span>
+                </div>
+                <div class="card-content">
+                    <h4>Beef Bourguignon</h4>
+                    <p class="description">A slow-cooked French classic with red wine, mushrooms and herbs.</p>
+                </div>
+            </a>
+
+            <a href="recipes.html" class="recipe-card">
+                <div class="card-header">
+                    <img src="..." alt="Chicken Tikka">
+                    <span class="note-badge">4.8 / 5</span>
+                </div>
+                <div class="card-content">
+                    <h4>Chicken Tikka Masala</h4>
+                    <p class="description">Tender chicken in a creamy, spiced tomato sauce. A crowd favourite.</p>
+                </div>
+            </a>
         </div>
     </section>
 </main>
+
 <footer>
     <p>&copy; 2026 Le Gourmand. All rights reserved.</p>
 </footer>

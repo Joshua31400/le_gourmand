@@ -9,31 +9,34 @@
 </head>
 <body>
 <main>
-    <h1>Sign Up</h1>
+    <h1>Create an account</h1>
+    <p class="auth-subtitle">Join Le Gourmand and start sharing recipes</p>
+
     <form action="" method="post">
         <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Choose a username" required>
         </div>
-
         <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required>
         </div>
-
         <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
         </div>
-
         <div>
-            <label for="confirm-password">Repeat Password:</label>
-            <input type="password" id="confirm-password" name="confirm-password" required>
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" name="confirm-password" placeholder="••••••••" required>
         </div>
-
         <button type="submit">Sign Up</button>
     </form>
+
+    <p class="auth-footer">
+        Already have an account? <a href="signin.html">Sign in</a>
+    </p>
 </main>
+
 <footer>
     <p>&copy; 2026 Le Gourmand. All rights reserved.</p>
 </footer>
