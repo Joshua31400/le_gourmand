@@ -8,29 +8,31 @@
     <link rel="stylesheet" href="../style/recipes.css">
 </head>
 <body>
+
 <header>
     <nav>
         <ul>
-            <li><a href="home.html">Home</a></li>
-            <li><a href="profile.html">Profile</a></li>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/profile">Profile</a></li>
         </ul>
     </nav>
 </header>
 
 <main>
     <article>
-        <!-- HERO — plus de <header> imbriqué, on utilise un div.recipe-hero -->
+
+        <!-- HERO -->
         <div class="recipe-hero">
             <img src="" alt="Dish image">
             <div class="recipe-hero-text">
-                <h1>Pasta Carbonara</h1>
+                <h1>Recipe Name</h1>
                 <div class="recipe-rating">
-                    <span class="stars">★★★★☆</span>
-                    <span class="score">4.5 / 5</span>
+                    <div id="ratingStars" class="rating-stars"></div>
+                    <span class="score">N/A</span>
                 </div>
                 <div class="hero-actions">
-                    <button type="button">♡ Add to favorites</button>
-                    <button type="button" class="btn-outline">↗ Share</button>
+                    <button type="button" id="favoriteBtn">♡ Add to favorites</button>
+                    <button type="button" id="shareBtn" class="btn-outline">↗ Share</button>
                 </div>
             </div>
         </div>
@@ -38,54 +40,37 @@
         <!-- DESCRIPTION -->
         <div class="detail-section" id="description">
             <h2>Description</h2>
-            <p>This is the detailed description of the recipe and its story. A true Roman classic, born in the kitchens of central Italy during the Second World War.</p>
+            <p></p>
         </div>
 
-        <!-- INFORMATION — dd comme tags -->
+        <!-- INFORMATION -->
         <div class="detail-section" id="infos">
             <h2>Information</h2>
-            <dl>
-                <dt>Country:</dt>
-                <dd>Italy</dd>
-                <dt>Type:</dt>
-                <dd>Main Course</dd>
-                <dt>Diet:</dt>
-                <dd>Vegetarian</dd>
-                <dt>Time:</dt>
-                <dd>30 min</dd>
-            </dl>
+            <dl></dl>
         </div>
 
         <!-- INGREDIENTS -->
         <div class="detail-section" id="ingredients">
             <h2>Ingredients</h2>
-            <ul>
-                <li>400g spaghetti</li>
-                <li>200g guanciale or pancetta</li>
-                <li>4 egg yolks</li>
-                <li>100g Pecorino Romano</li>
-                <li>Black pepper to taste</li>
-                <li>Pinch of salt</li>
-            </ul>
+            <ul></ul>
         </div>
 
         <!-- PREPARATION -->
         <div class="detail-section" id="preparation">
             <h2>Preparation</h2>
-            <ol>
-                <li>Cook the spaghetti in a large pot of salted boiling water until al dente.</li>
-                <li>Meanwhile, cut the guanciale into small batons and fry in a pan until crispy.</li>
-                <li>In a bowl, whisk together egg yolks, grated Pecorino, and a generous amount of black pepper.</li>
-                <li>Reserve a cup of pasta water before draining the spaghetti.</li>
-                <li>Toss the pasta into the pan with the guanciale, remove from heat, and add the egg mixture. Mix vigorously, adding pasta water little by little to create a creamy sauce.</li>
-                <li>Serve immediately with extra Pecorino and pepper.</li>
-            </ol>
+            <ol></ol>
         </div>
+
     </article>
 </main>
 
 <footer>
     <p>&copy; 2026 Le Gourmand. All rights reserved.</p>
 </footer>
+
+<script src="/scripts/config.js"></script>
+<script src="/scripts/checkAuth.js"></script>
+<script src="/scripts/recipe.js"></script>
+
 </body>
 </html>

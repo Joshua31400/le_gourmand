@@ -7,15 +7,17 @@
     <link rel="stylesheet" href="../style/root.css">
     <link rel="stylesheet" href="../style/profile.css">
     <link rel="stylesheet" href="../style/card.css">
+    <link rel="stylesheet" href="../style/create_recipe_modal.css">
 </head>
 <body>
+
 <header>
     <nav>
         <ul>
-            <li><a href="home.html">Home</a></li>
-            <li><a href="profile.html" class="nav-active">Profile</a></li>
-            <li><a href="#">Create recipe</a></li>
-            <li><button>Logout</button></li>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/profile" class="nav-active">Profile</a></li>
+            <li><a href="#" id="createRecipeBtn">Create recipe</a></li>
+            <li><button id="logoutBtn">Logout</button></li>
         </ul>
     </nav>
 </header>
@@ -23,70 +25,132 @@
 <main>
     <!-- USER INFO -->
     <section id="user-info">
-        <img src="..." alt="User avatar">
+        <img src="https://via.placeholder.com/64" alt="User avatar" id="user-picture">
         <div class="user-details">
-            <p id="username">Username</p>
-            <p class="user-meta">Member since January 2026</p>
+            <p id="username">Loading...</p>
+            <p id="user-email" class="user-meta"></p>
+            <button id="editProfileBtn" style="display: none; margin-top: 1rem;">Edit Profile</button>
         </div>
     </section>
 
-    <!-- FAVORITES — grid direct, pas de div imbriqué -->
+    <!-- FAVORITES -->
     <section id="favorites">
-        <h2>My Favorites</h2>
+        <h2>My Favorites (<span id="favorites-count">0</span>)</h2>
         <p class="section-subtitle">Recipes you've saved</p>
-        <div class="recipes-grid">
-            <a href="recipes.html" class="recipe-card">
-                <div class="card-header">
-                    <img src="..." alt="Pasta Carbonara">
-                    <span class="note-badge">4 / 5</span>
-                </div>
-                <div class="card-content">
-                    <h4>Pasta Carbonara</h4>
-                    <p class="description">Classic Italian dish with eggs, cheese, bacon and black pepper.</p>
-                </div>
-            </a>
+        <div id="favorites-grid" class="recipes-grid">
+            <!-- Loaded dynamically -->
         </div>
     </section>
 
     <!-- SHARED -->
     <section id="shared">
-        <h2>Shared with me</h2>
+        <h2>Shared with me (<span id="shared-count">0</span>)</h2>
         <p class="section-subtitle">Recipes friends have shared</p>
-        <div class="recipes-grid">
-            <a href="recipes.html" class="recipe-card">
-                <div class="card-header">
-                    <img src="..." alt="Beef Bourguignon">
-                    <span class="note-badge">4.5 / 5</span>
-                </div>
-                <div class="card-content">
-                    <h4>Beef Bourguignon</h4>
-                    <p class="description">A slow-cooked French classic with red wine, mushrooms and herbs.</p>
-                </div>
-            </a>
+        <div id="shared-grid" class="recipes-grid">
+            <!-- Loaded dynamically -->
         </div>
     </section>
 
     <!-- MY RECIPES -->
     <section id="my-recipes">
-        <h2>My Recipes</h2>
+        <h2>My Recipes (<span id="recipes-count">0</span>)</h2>
         <p class="section-subtitle">Recipes you've created</p>
-        <div class="recipes-grid">
-            <a href="recipes.html" class="recipe-card">
-                <div class="card-header">
-                    <img src="..." alt="Chicken Tikka">
-                    <span class="note-badge">4.8 / 5</span>
-                </div>
-                <div class="card-content">
-                    <h4>Chicken Tikka Masala</h4>
-                    <p class="description">Tender chicken in a creamy, spiced tomato sauce.</p>
-                </div>
-            </a>
+        <div id="recipes-grid" class="recipes-grid">
+            <!-- Loaded dynamically -->
         </div>
     </section>
 </main>
 
+<!-- Edit Profile Modal -->
+<div id="editProfileModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Edit Profile</h2>
+        <form id="editProfileForm">
+            <div class="form-group">
+                <label for="profilePicture">Profile Picture:</label>
+                <input type="file" id="profilePicture" name="picture" accept="image/jpeg,image/jpg,image/png,image/gif">
+                <small>Max 5MB. Formats: JPG, PNG, GIF</small>
+                <p id="fileName"></p>
+            </div>
+            <div class="form-group">
+                <label for="editUsername">Username:</label>
+                <input type="text" id="editUsername" name="username" required>
+            </div>
+            <button type="submit">Save Changes</button>
+        </form>
+        <div id="editMessage"></div>
+    </div>
+</div>
+
+<!-- Create Recipe Modal -->
+<div id="createRecipeModal" class="modal">
+    <div class="modal-content modal-large">
+        <span class="close">&times;</span>
+        <h2>Create New Recipe</h2>
+        <form id="createRecipeForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="recipeName">Recipe Name: *</label>
+                    <input type="text" id="recipeName" required>
+                </div>
+                <div class="form-group">
+                    <label for="recipeImage">Recipe Image:</label>
+                    <input type="file" id="recipeImage" accept="image/jpeg,image/jpg,image/png,image/gif">
+                    <small>Max 5MB. Formats: JPG, PNG, GIF</small>
+                    <p id="recipeFileName"></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="recipeDescription">Description: *</label>
+                <textarea id="recipeDescription" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="recipePreparation">Preparation Steps: *</label>
+                <textarea id="recipePreparation" rows="6" required placeholder="Enter each step on a new line"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="recipeType">Meal Type: *</label>
+                    <select id="recipeType" required>
+                        <option value="">Select type...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="recipeDiet">Diet: *</label>
+                    <select id="recipeDiet" required>
+                        <option value="">Select diet...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="recipeCountry">Country: *</label>
+                    <select id="recipeCountry" required>
+                        <option value="">Select country...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="recipeIngredients">Ingredients: *</label>
+                <select id="recipeIngredients">
+                    <option value="">Select ingredients...</option>
+                </select>
+                <small>Select an ingredient to add it to your recipe</small>
+                <div id="selectedIngredients" class="chips-container"></div>
+            </div>
+            <button type="submit">Create Recipe</button>
+        </form>
+        <div id="createMessage"></div>
+    </div>
+</div>
+
 <footer>
     <p>&copy; 2026 Le Gourmand. All rights reserved.</p>
 </footer>
+
+<script src="/scripts/config.js"></script>
+<script src="/scripts/checkAuth.js"></script>
+<script src="/scripts/profile.js"></script>
+<script src="/scripts/create_recipe.js"></script>
+
 </body>
 </html>

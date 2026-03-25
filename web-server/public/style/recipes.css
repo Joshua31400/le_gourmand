@@ -70,14 +70,36 @@ article {
     box-shadow: var(--shadow-sm);
 }
 
-.recipe-rating .stars {
-    color: #e8a838;
-    letter-spacing: -.05em;
-}
-
 .recipe-rating .score {
     color: var(--clr-mid);
     font-weight: var(--weight-regular);
+}
+
+/* ─── ÉTOILES INTERACTIVES ───────────────────────────────── */
+.rating-stars {
+    display: flex;
+    gap: .1rem;
+    /* z-index > ::after overlay du hero pour que le hover fonctionne */
+    position: relative;
+    z-index: 2;
+}
+
+.rating-stars .star {
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 100ms ease, transform 100ms ease;
+    user-select: none;
+}
+
+.rating-stars .star.rated {
+    color: #e8a838;
+}
+
+.rating-stars .star.hovered {
+    color: #e8a838;
+    transform: scale(1.2);
 }
 
 /* ─── BOUTONS HERO ───────────────────────────────────────── */
@@ -134,7 +156,7 @@ article {
 }
 
 #infos dt {
-    display: none; /* caché, on garde le dd comme tag */
+    display: none;
 }
 
 #infos dd {
@@ -148,33 +170,6 @@ article {
     border-radius: var(--radius-pill);
     margin: 0;
 }
-
-/* si on veut garder les labels on les rmet visibles avec cette approche alternative :
-   on utilise un layout grid 2 colonnes */
-/* Uncomment if you prefer a label : value layout instead of tags:
-
-#infos dl {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: .4rem .75rem;
-    align-items: center;
-}
-#infos dt {
-    display: block;
-    font-size: var(--text-sm);
-    font-weight: var(--weight-semi);
-    color: var(--clr-mid);
-    text-align: right;
-}
-#infos dd {
-    font-size: var(--text-sm);
-    color: var(--clr-dark);
-    margin: 0;
-    background: none;
-    padding: 0;
-    border-radius: 0;
-}
-*/
 
 /* ─── UL INGRÉDIENTS ─────────────────────────────────────── */
 #ingredients ul {
@@ -197,7 +192,6 @@ article {
     border-bottom: none;
 }
 
-/* point vert avant chaque ingrédient */
 #ingredients li::before {
     content: '';
     width: 8px;
@@ -225,7 +219,6 @@ article {
     counter-increment: steps;
 }
 
-/* numéro stylé comme un cercle */
 #preparation li::before {
     content: counter(steps);
     display: inline-flex;

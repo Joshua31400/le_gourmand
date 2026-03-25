@@ -7,112 +7,162 @@
     <link rel="stylesheet" href="../style/root.css">
     <link rel="stylesheet" href="../style/home.css">
     <link rel="stylesheet" href="../style/card.css">
+    <link rel="stylesheet" href="../style/create_recipe_modal.css">
 </head>
 <body>
+
 <header>
     <nav>
         <ul>
-            <li><a href="home.html" class="nav-active">Home</a></li>
-            <li><a href="profile.html">Profile</a></li>
-            <li><a href="#">Create recipe</a></li>
-            <li><button>Logout</button></li>
+            <li><a href="/home" class="nav-active">Home</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="#" id="createRecipeBtn">Create recipe</a></li>
+            <li><button id="logoutBtn">Logout</button></li>
         </ul>
     </nav>
 </header>
 
 <main>
-    <!-- Un seul h1 par page -->
+    <!-- Heading -->
     <div id="page-heading">
-        <h1>Welcome back, {$name}</h1>
+        <h1>Welcome back</h1>
         <p>Discover, save, and share your favourite recipes</p>
     </div>
 
     <!-- SEARCH -->
     <section id="search-section">
         <h2>Find a recipe</h2>
-        <form action="" method="get">
+        <form id="searchForm">
             <input type="search" id="search" name="q" placeholder="Recipe, ingredient, country…">
-            <button type="submit">Search</button>
+            <button type="submit" class="search-btn">Search</button>
+            <button type="button" id="clearSearchBtn" class="btn-outline clear-btn">Clear</button>
         </form>
     </section>
 
     <!-- FILTERS -->
     <section id="filters">
         <h2>Filter Recipes</h2>
-        <form action="" method="get">
-            <fieldset>
+        <form id="filtersForm">
+            <fieldset id="countryFieldset">
                 <legend>Country</legend>
-                <label><input type="checkbox" name="country" value="france"> France</label>
-                <label><input type="checkbox" name="country" value="italy"> Italy</label>
-                <label><input type="checkbox" name="country" value="japan"> Japan</label>
-                <label><input type="checkbox" name="country" value="germany"> Germany</label>
-                <label><input type="checkbox" name="country" value="russia"> Russia</label>
+                <select id="countrySelect">
+                    <option value="">Select a country…</option>
+                </select>
+                <div id="countryChips" class="chips-container"></div>
             </fieldset>
-            <fieldset>
+
+            <fieldset id="ingredientFieldset">
                 <legend>Main Ingredient</legend>
-                <label><input type="checkbox" name="ingredient" value="chicken"> Chicken</label>
-                <label><input type="checkbox" name="ingredient" value="beef"> Beef</label>
-                <label><input type="checkbox" name="ingredient" value="vegetables"> Vegetables</label>
+                <select id="ingredientSelect">
+                    <option value="">Select an ingredient…</option>
+                </select>
+                <div id="ingredientChips" class="chips-container"></div>
             </fieldset>
-            <fieldset>
+
+            <fieldset id="typeFieldset">
                 <legend>Meal Type</legend>
-                <label><input type="checkbox" name="type" value="starter"> Starter</label>
-                <label><input type="checkbox" name="type" value="main"> Main Course</label>
-                <label><input type="checkbox" name="type" value="dessert"> Dessert</label>
+                <select id="typeSelect">
+                    <option value="">Select a type…</option>
+                </select>
+                <div id="typeChips" class="chips-container"></div>
             </fieldset>
-            <fieldset>
+
+            <fieldset id="dietFieldset">
                 <legend>Diet</legend>
-                <label><input type="checkbox" name="diet" value="vegetarian"> Vegetarian</label>
-                <label><input type="checkbox" name="diet" value="vegan"> Vegan</label>
-                <label><input type="checkbox" name="diet" value="gluten-free"> Gluten Free</label>
+                <select id="dietSelect">
+                    <option value="">Select a diet…</option>
+                </select>
+                <div id="dietChips" class="chips-container"></div>
             </fieldset>
-            <button type="submit">Apply Filters</button>
         </form>
     </section>
 
-    <!-- RECIPES LIST — plus de div.recipes-grid imbriqué -->
+    <!-- RECIPES LIST -->
     <section id="recipes-list">
         <h3>All recipes</h3>
         <p class="panel-subtitle">Showing all available recipes</p>
         <div class="recipes-grid">
-            <a href="recipes.html" class="recipe-card">
-                <div class="card-header">
-                    <img src="..." alt="Pasta Carbonara">
-                    <span class="note-badge">4 / 5</span>
-                </div>
-                <div class="card-content">
-                    <h4>Pasta Carbonara</h4>
-                    <p class="description">Classic Italian dish with eggs, cheese, bacon and black pepper.</p>
-                </div>
-            </a>
-
-            <a href="recipes.html" class="recipe-card">
-                <div class="card-header">
-                    <img src="..." alt="Beef Bourguignon">
-                    <span class="note-badge">4.5 / 5</span>
-                </div>
-                <div class="card-content">
-                    <h4>Beef Bourguignon</h4>
-                    <p class="description">A slow-cooked French classic with red wine, mushrooms and herbs.</p>
-                </div>
-            </a>
-
-            <a href="recipes.html" class="recipe-card">
-                <div class="card-header">
-                    <img src="..." alt="Chicken Tikka">
-                    <span class="note-badge">4.8 / 5</span>
-                </div>
-                <div class="card-content">
-                    <h4>Chicken Tikka Masala</h4>
-                    <p class="description">Tender chicken in a creamy, spiced tomato sauce. A crowd favourite.</p>
-                </div>
-            </a>
+            <!-- Loaded dynamically by home.js -->
         </div>
     </section>
 </main>
 
+<!-- Create Recipe Modal -->
+<div id="createRecipeModal" class="modal">
+    <div class="modal-content modal-large">
+        <span class="close">&times;</span>
+        <h2>Create New Recipe</h2>
+        <form id="createRecipeForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="recipeName">Recipe Name: *</label>
+                    <input type="text" id="recipeName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipeImage">Recipe Image:</label>
+                    <input type="file" id="recipeImage" accept="image/jpeg,image/jpg,image/png,image/gif">
+                    <small>Max 5MB. Formats: JPG, PNG, GIF</small>
+                    <p id="recipeFileName"></p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="recipeDescription">Description: *</label>
+                <textarea id="recipeDescription" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="recipePreparation">Preparation Steps: *</label>
+                <textarea id="recipePreparation" rows="6" required placeholder="Enter each step on a new line"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="recipeType">Meal Type: *</label>
+                    <select id="recipeType" required>
+                        <option value="">Select type...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipeDiet">Diet: *</label>
+                    <select id="recipeDiet" required>
+                        <option value="">Select diet...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipeCountry">Country: *</label>
+                    <select id="recipeCountry" required>
+                        <option value="">Select country...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="recipeIngredients">Ingredients: *</label>
+                <select id="recipeIngredients">
+                    <option value="">Select ingredients...</option>
+                </select>
+                <small>Select an ingredient to add it to your recipe</small>
+                <div id="selectedIngredients" class="chips-container"></div>
+            </div>
+
+            <button type="submit">Create Recipe</button>
+        </form>
+        <div id="createMessage"></div>
+    </div>
+</div>
+
 <footer>
     <p>&copy; 2026 Le Gourmand. All rights reserved.</p>
 </footer>
+
+<script src="/scripts/config.js"></script>
+<script src="/scripts/checkAuth.js"></script>
+<script src="/scripts/home.js"></script>
+<script src="/scripts/create_recipe.js"></script>
+
 </body>
 </html>

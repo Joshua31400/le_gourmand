@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="../style/signup.css">
 </head>
 <body>
+
 <main>
     <h1>Create an account</h1>
     <p class="auth-subtitle">Join Le Gourmand and start sharing recipes</p>
 
-    <form action="" method="post">
+    <form id="signupForm">
         <div>
             <label for="username">Username</label>
             <input type="text" id="username" name="username" placeholder="Choose a username" required>
@@ -23,7 +24,7 @@
         </div>
         <div>
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="••••••••" required>
+            <input type="password" id="password" name="password" placeholder="••••••••" required minlength="6">
         </div>
         <div>
             <label for="confirm-password">Confirm Password</label>
@@ -32,13 +33,19 @@
         <button type="submit">Sign Up</button>
     </form>
 
+    <div id="errorMessage" style="display: none;"></div>
+
     <p class="auth-footer">
-        Already have an account? <a href="signin.html">Sign in</a>
+        Already have an account? <a href="/signin">Sign in</a>
     </p>
 </main>
 
 <footer>
     <p>&copy; 2026 Le Gourmand. All rights reserved.</p>
 </footer>
+
+<script src="/scripts/config.js"></script>
+<script src="/scripts/signup.js"></script>
+
 </body>
 </html>
