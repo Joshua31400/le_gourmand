@@ -16,5 +16,6 @@ router.delete('/:id/favorite', verifyToken, recipeController.removeFromFavorites
 router.post('/:id/share', verifyToken, recipeController.addToShared);
 router.delete('/:id/share', verifyToken, recipeController.removeFromShared);
 router.post('/:id/rate', verifyToken, recipeController.rateRecipe);
+router.get('/:id/my-rating', verifyToken, recipeController.getMyRating);
 
 module.exports = router;
