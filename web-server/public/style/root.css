@@ -216,8 +216,7 @@ button:active {
 }
 
 button.btn-outline {
-    background: transparent;
-    color: var(--clr-accent);
+    color: var(--clr-bg);
     border: 1.5px solid var(--clr-accent);
 }
 

@@ -86,6 +86,39 @@
     align-items: flex-end;
 }
 
+#filters select {
+    appearance: none;
+    -webkit-appearance: none;
+    font-family: inherit;
+    font-size: var(--text-sm);
+    color: var(--clr-dark);
+    background-color: var(--clr-surface);
+    /* Flèche personnalisée reprenant votre couleur d'accentuation */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234a6741'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+    border: 1.5px solid rgba(26, 23, 20, 0.12);
+    border-radius: var(--radius-md);
+    padding: 0.7rem 2.5rem 0.7rem 1rem;
+    width: 100%;
+    transition: background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+    outline: none;
+    cursor: pointer;
+}
+
+#filters select:hover {
+    background-color: var(--clr-surface-alt);
+    border-color: rgba(74, 103, 65, 0.2);
+}
+
+#filters select:focus {
+    border-color: var(--clr-accent);
+    box-shadow: 0 0 0 3px var(--clr-accent-pale);
+}
+
 /* ─── FIELDSETS ──────────────────────────────────────────── */
 fieldset {
     border: none;
