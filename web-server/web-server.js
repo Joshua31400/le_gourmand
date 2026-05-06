@@ -19,11 +19,6 @@ const uploadRoutes = require('./routes/upload');
 app.use('/', pageRoutes);
 app.use('/', uploadRoutes);
 
-// 404 handler
-app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, 'public', 'pages', '404.html'));
-});
-
 app.listen(PORT, () => {
     console.log(`🌐 Web Server running on port: ${PORT}`);
     console.log(`📍 http://localhost:${PORT}`);
