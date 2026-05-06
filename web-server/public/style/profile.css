@@ -223,3 +223,75 @@
 .chat-input-area button:hover {
     opacity: 0.9;
 }
+/* ─── BOÎTE DE RÉCEPTION (INBOX) ─────────────────────────── */
+#inbox-section {
+    background: var(--clr-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 1.5rem var(--pad-x) 1.75rem;
+    margin-bottom: 1.75rem;
+    border: 1px solid rgba(26,23,20,.04);
+}
+
+.inbox-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.inbox-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.inbox-item:hover {
+    background-color: #f1f1f1;
+    transform: translateX(5px);
+}
+
+.inbox-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.inbox-details {
+    flex: 1;
+    overflow: hidden;
+}
+
+.inbox-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.inbox-name {
+    font-weight: bold;
+    color: var(--clr-dark);
+    font-size: 1rem;
+}
+
+.inbox-date {
+    font-size: 0.75rem;
+    color: #888;
+}
+
+.inbox-preview {
+    font-size: 0.85rem;
+    color: var(--clr-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

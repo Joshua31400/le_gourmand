@@ -229,17 +229,19 @@ window.deleteItem = deleteItem;
 function setupLogout() {
     const logoutBtn = document.getElementById('logoutBtn');
 
-    logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.href = '/signin';
-    });
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/signin';
+        });
+    }
 }
 
 // Show edit button if viewing own profile
 function showEditButtonIfOwn(isOwn) {
     const editBtn = document.getElementById('editProfileBtn');
-    if (isOwn) {
+    if (isOwn && editBtn) {
         editBtn.style.display = 'inline-block';
         editBtn.addEventListener('click', openEditModal);
     }
@@ -253,18 +255,23 @@ function openEditModal() {
     // Pre-fill current username
     document.getElementById('editUsername').value = username;
 
-    modal.style.display = 'block';
+    if(modal) modal.style.display = 'block';
 }
 
 // Close edit profile modal
 function closeEditModal() {
     const modal = document.getElementById('editProfileModal');
-    modal.style.display = 'none';
+    if(modal) modal.style.display = 'none';
 
     // Clear form
-    document.getElementById('editProfileForm').reset();
-    document.getElementById('editMessage').style.display = 'none';
-    document.getElementById('editMessage').className = '';
+    const form = document.getElementById('editProfileForm');
+    if(form) form.reset();
+
+    const message = document.getElementById('editMessage');
+    if(message) {
+        message.style.display = 'none';
+        message.className = '';
+    }
 }
 
 // Setup modal events
@@ -273,7 +280,7 @@ function setupModal() {
     const closeBtn = document.querySelector('.close');
 
     // Close modal when clicking X
-    closeBtn.addEventListener('click', closeEditModal);
+    if(closeBtn) closeBtn.addEventListener('click', closeEditModal);
 
     // Close modal when clicking outside
     window.addEventListener('click', (e) => {
@@ -283,10 +290,12 @@ function setupModal() {
     });
 
     // Handle form submission
-    document.getElementById('editProfileForm').addEventListener('submit', handleEditProfile);
+    const editForm = document.getElementById('editProfileForm');
+    if(editForm) editForm.addEventListener('submit', handleEditProfile);
 
     // Show file name when selected
-    document.getElementById('profilePicture').addEventListener('change', showFileName);
+    const profilePic = document.getElementById('profilePicture');
+    if(profilePic) profilePic.addEventListener('change', showFileName);
 }
 
 // Show selected file name
@@ -296,10 +305,12 @@ function showFileName(e) {
     if (e.target.files.length > 0) {
         const file = e.target.files[0];
         const fileSize = (file.size / 1024 / 1024).toFixed(2);
-        fileNameDisplay.textContent = `Selected: ${file.name} (${fileSize} MB)`;
-        fileNameDisplay.style.color = '#28a745';
+        if(fileNameDisplay) {
+            fileNameDisplay.textContent = `Selected: ${file.name} (${fileSize} MB)`;
+            fileNameDisplay.style.color = '#28a745';
+        }
     } else {
-        fileNameDisplay.textContent = '';
+        if(fileNameDisplay) fileNameDisplay.textContent = '';
     }
 }
 
@@ -405,7 +416,7 @@ async function handleEditProfile(e) {
 }
 
 /* ============================================================
-   LOGIQUE DE LA MESSAGERIE (CHAT / DM)
+   LOGIQUE DE LA MESSAGERIE (CHAT / DM / INBOX)
    ============================================================ */
 
 let currentConversationId = null;
@@ -420,7 +431,85 @@ function showDMButtonIfNotOwn(isOwn) {
     }
 }
 
-// Ouvrir la fenêtre de chat
+// Charger la boîte de réception (Inbox)
+async function loadInbox(userId, isOwn) {
+    const inboxSection = document.getElementById('inbox-section');
+
+    // On n'affiche la messagerie que si c'est notre propre profil
+    if (!isOwn) {
+        if(inboxSection) inboxSection.style.display = 'none';
+        return;
+    }
+
+    if(inboxSection) inboxSection.style.display = 'block';
+
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${CONFIG.API_URL}/chat/users/${userId}/conversations`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            const inboxList = document.getElementById('inbox-list');
+            const inboxCount = document.getElementById('inbox-count');
+
+            if(inboxCount) inboxCount.textContent = data.data.length;
+
+            if (data.data.length === 0) {
+                if(inboxList) inboxList.innerHTML = '<p style="color: #888; padding: 10px;">Aucune discussion pour le moment.</p>';
+                return;
+            }
+
+            if(inboxList) inboxList.innerHTML = '';
+
+            data.data.forEach(conv => {
+                const date = new Date(conv.last_message_date);
+                const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                const item = document.createElement('div');
+                item.className = 'inbox-item';
+                // Au clic, on ouvre le chat avec l'ID de la conversation
+                item.onclick = () => openChatFromInbox(conv.conversation_id, conv.target_username);
+
+                item.innerHTML = `
+                    <img src="${conv.target_picture || 'https://via.placeholder.com/50'}" class="inbox-avatar" alt="Avatar">
+                    <div class="inbox-details">
+                        <div class="inbox-header">
+                            <span class="inbox-name">${conv.target_username}</span>
+                            <span class="inbox-date">${timeString}</span>
+                        </div>
+                        <div class="inbox-preview">${conv.last_message || 'Nouvelle conversation'}</div>
+                    </div>
+                `;
+                inboxList.appendChild(item);
+            });
+        }
+    } catch (error) {
+        console.error('Erreur chargement inbox:', error);
+    }
+}
+
+// Fonction spéciale pour ouvrir un chat depuis la boîte de réception
+async function openChatFromInbox(conversationId, targetUsername) {
+    currentConversationId = conversationId;
+
+    const popup = document.getElementById('chatPopup');
+    const chatUser = document.getElementById('chatUserName');
+
+    if(popup) popup.style.display = 'flex';
+    if(chatUser) chatUser.textContent = targetUsername;
+
+    await loadMessages();
+
+    if (chatPollingInterval) clearInterval(chatPollingInterval);
+    chatPollingInterval = setInterval(loadMessages, 3000);
+
+    scrollToBottom();
+}
+
+// Ouvrir la fenêtre de chat (depuis le bouton du profil d'un autre)
 async function openChat() {
     const targetUserId = getUserIdFromUrl();
     const userStr = localStorage.getItem('user');
@@ -448,8 +537,12 @@ async function openChat() {
         if (data.success) {
             currentConversationId = data.data.conversationId;
 
-            document.getElementById('chatPopup').style.display = 'flex';
-            document.getElementById('chatUserName').textContent = document.getElementById('username').textContent;
+            const popup = document.getElementById('chatPopup');
+            const chatUser = document.getElementById('chatUserName');
+            const usernameDisplay = document.getElementById('username');
+
+            if(popup) popup.style.display = 'flex';
+            if(chatUser && usernameDisplay) chatUser.textContent = usernameDisplay.textContent;
 
             await loadMessages();
 
@@ -481,6 +574,8 @@ async function loadMessages() {
 
         if (data.success) {
             const chatBox = document.getElementById('chatMessages');
+            if(!chatBox) return;
+
             chatBox.innerHTML = ''; // On vide avant de remplir
 
             data.data.forEach(msg => {
@@ -576,6 +671,10 @@ async function init() {
     setupChatEvents(); // Initialisation des events du chat
 
     await loadUserProfile(userId);
+
+    // NOUVELLE LIGNE : On charge la boîte de réception
+    await loadInbox(userId, isOwn);
+
     await loadFavorites(userId, isOwn);
     await loadShared(userId, isOwn);
     await loadMyRecipes(userId, isOwn);

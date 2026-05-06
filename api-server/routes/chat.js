@@ -8,4 +8,6 @@ router.get('/conversations/:id/messages', chatController.getMessages);
 
 router.post('/conversations/:id/messages', chatController.sendMessage);
 
+router.get('/users/:userId/conversations', chatController.getUserConversations);
+
 module.exports = router;

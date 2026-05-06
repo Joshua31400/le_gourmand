@@ -121,3 +121,39 @@ exports.sendMessage = async (req, res) => {
         });
     }
 };
+// GET récupérer toutes les conversations d'un utilisateur (Boîte de réception)
+exports.getUserConversations = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        // Cette requête SQL magique récupère les discussions, les infos de l'autre utilisateur, et le dernier message !
+        const [conversations] = await db.query(
+            `SELECT 
+                c.id AS conversation_id,
+                u.id AS target_user_id,
+                u.username AS target_username,
+                u.picture AS target_picture,
+                (SELECT content FROM messages m WHERE m.conversation_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message,
+                (SELECT created_at FROM messages m WHERE m.conversation_id = c.id ORDER BY created_at DESC LIMIT 1) as last_message_date
+             FROM conversations c
+             JOIN users u ON (c.user1_id = u.id OR c.user2_id = u.id) AND u.id != ?
+             WHERE c.user1_id = ? OR c.user2_id = ?
+             HAVING last_message IS NOT NULL
+             ORDER BY last_message_date DESC`,
+            [userId, userId, userId]
+        );
+
+        res.json({
+            success: true,
+            data: conversations
+        });
+
+    } catch (error) {
+        console.error('Error fetching user conversations:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erreur lors de la récupération des discussions',
+            error: error.message
+        });
+    }
+};

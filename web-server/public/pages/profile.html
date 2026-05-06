@@ -31,7 +31,17 @@
             <p id="username">Loading...</p>
             <p id="user-email" class="user-meta"></p>
             <button id="editProfileBtn" style="display: none; margin-top: 1rem;">Edit Profile</button>
-            <button id="dmBtn" style="display: none; margin-top: 1rem;">Message</button>        </div>
+            <button id="dmBtn" style="display: none; margin-top: 1rem;">Message</button>
+        </div>
+    </section>
+
+    <!-- NOUVEAU : BOÎTE DE RÉCEPTION (Visible uniquement sur son propre profil) -->
+    <section id="inbox-section" style="display: none;">
+        <h2>Messagerie (<span id="inbox-count">0</span>)</h2>
+        <p class="section-subtitle">Vos discussions récentes</p>
+        <div id="inbox-list" class="inbox-container">
+            <!-- Les discussions se chargeront ici -->
+        </div>
     </section>
 
     <!-- FAVORITES -->
