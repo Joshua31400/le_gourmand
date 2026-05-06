@@ -55,6 +55,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 API Server running on port: ${PORT}`);
-    console.log(`📍 http://localhost:${PORT}`);
+    console.log(`API Server running on port: ${PORT}`);
+    console.log(`http://localhost:${PORT}`);
 });

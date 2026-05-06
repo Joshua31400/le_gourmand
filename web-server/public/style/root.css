@@ -35,6 +35,16 @@ body {
     background-color: var(--background-color);
 }
 
+main a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+main a:hover {
+    color: var(--accent-color);
+}
+
 nav {
     display: flex;
     align-items: center;
@@ -91,4 +101,9 @@ main {
 footer {
     text-align: center;
     padding: var(--button-padding);
+}
+
+.redirect-link {
+    text-align: center;
+    margin-top: 1rem;
 }
