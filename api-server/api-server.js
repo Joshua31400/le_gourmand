@@ -17,7 +17,7 @@ const ingredientRoutes = require('./routes/ingredients');
 const dietRoutes = require('./routes/diets');
 const countryRoutes = require('./routes/countries');
 const recipeTypeRoutes = require('./routes/recipeTypes');
-
+const chatRoutes = require('./routes/chat');
 // Use routes
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/auth', authRoutes);
@@ -26,6 +26,7 @@ app.use('/api/ingredients', ingredientRoutes);
 app.use('/api/diets', dietRoutes);
 app.use('/api/countries', countryRoutes);
 app.use('/api/recipe-types', recipeTypeRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
