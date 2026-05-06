@@ -51,7 +51,7 @@ async function loadFilterOptions() {
         if (countriesData.success) {
             const countrySelect = document.getElementById('countrySelect');
             countriesData.data.forEach(country => {
-                countrySelect.innerHTML += `<option value="${country.id}">${country.name}</option>`;
+                countrySelect.innerHTML += `<option class="filter-option" value="${country.id}">${country.name}</option>`;
             });
         }
 
@@ -62,7 +62,7 @@ async function loadFilterOptions() {
         if (ingredientsData.success) {
             const ingredientSelect = document.getElementById('ingredientSelect');
             ingredientsData.data.forEach(ingredient => {
-                ingredientSelect.innerHTML += `<option value="${ingredient.id}">${ingredient.name}</option>`;
+                ingredientSelect.innerHTML += `<option class="filter-option" value="${ingredient.id}">${ingredient.name}</option>`;
             });
         }
 
@@ -73,7 +73,7 @@ async function loadFilterOptions() {
         if (typesData.success) {
             const typeSelect = document.getElementById('typeSelect');
             typesData.data.forEach(type => {
-                typeSelect.innerHTML += `<option value="${type.id}">${type.name}</option>`;
+                typeSelect.innerHTML += `<option class="filter-option" value="${type.id}">${type.name}</option>`;
             });
         }
 
@@ -84,7 +84,7 @@ async function loadFilterOptions() {
         if (dietsData.success) {
             const dietSelect = document.getElementById('dietSelect');
             dietsData.data.forEach(diet => {
-                dietSelect.innerHTML += `<option value="${diet.id}">${diet.name}</option>`;
+                dietSelect.innerHTML += `<option class="filter-option" value="${diet.id}">${diet.name}</option>`;
             });
         }
     } catch (error) {

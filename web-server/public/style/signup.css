@@ -1,27 +1,97 @@
-
-main {
-    justify-content: center;
-    width: 90%;
-    max-width: 400px;
-    background-color: var(--surface-color);
-    padding: 5rem;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-}
-
-button {
-    width: 100%;
-    font-size: var(--font-size-base);
-    margin-top: 1rem;
-    cursor: pointer;
-}
+/* ============================================================
+   SIGN UP PAGE
+   ============================================================ */
 
 body {
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    margin: 0;
+    justify-content: center;
+    background: var(--clr-bg);
+    background-image:
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+footer {
+    display: none;
+}
+
+main {
+    width: 90%;
+    max-width: 420px;
+    background: var(--clr-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 2.75rem 2.25rem 2rem;
+    border: 1px solid rgba(26,23,20,.04);
+    margin-bottom: 3rem;
+    margin-top: 3rem;
+    animation: fadeUp var(--dur-md) var(--ease) both;
+}
+
+/* ─── TITRE ──────────────────────────────────────────────── */
+main h1 {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semi);
+    color: var(--clr-dark);
+    text-align: center;
+    margin-bottom: .25rem;
+}
+
+.auth-subtitle {
+    text-align: center;
+    font-size: var(--text-sm);
+    color: var(--clr-muted);
+    margin-bottom: 1.75rem;
+}
+
+/* ─── FORM ───────────────────────────────────────────────── */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+form > div {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+form > div label {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--clr-dark);
+}
+
+form > div input {
+    font-size: var(--text-base);
+}
+
+form button[type="submit"] {
+    width: 100%;
+    margin-top: .5rem;
+    padding: .75rem;
+    font-size: var(--text-base);
+    font-weight: var(--weight-semi);
+}
+
+/* ─── LIEN VERS SIGNIN ───────────────────────────────────── */
+.auth-footer {
+    text-align: center;
+    margin-top: 1.25rem;
+    font-size: var(--text-sm);
+    color: var(--clr-muted);
+}
+
+.auth-footer a {
+    color: var(--clr-accent);
+    font-weight: var(--weight-medium);
+    transition: color var(--dur) var(--ease);
+}
+
+.auth-footer a:hover {
+    color: var(--clr-accent-light);
 }

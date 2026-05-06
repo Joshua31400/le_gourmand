@@ -244,7 +244,7 @@ async function handleCreateRecipe(e) {
             diet_id,
             country_id,
             ingredients: selectedIngredients.map(ing => ing.id),
-            picture: picturePath
+            picture: picturePath || '/assets/default-food.png'
         };
 
         const response = await fetch(`${CONFIG.API_URL}/recipes`, {

@@ -8,45 +8,57 @@
     <link rel="stylesheet" href="../style/profile.css">
     <link rel="stylesheet" href="../style/card.css">
     <link rel="stylesheet" href="../style/create_recipe_modal.css">
+    <link rel="icon" type="image/png" href="/assets/favicon.webp">
 </head>
 <body>
+
 <header>
     <nav>
         <ul>
             <li><a href="/home">Home</a></li>
-            <li><a href="#" id="createRecipeBtn">Create recipes</a></li>
+            <li><a href="/profile" class="nav-active">Profile</a></li>
+            <li><a href="#" id="createRecipeBtn">Create recipe</a></li>
             <li><button id="logoutBtn">Logout</button></li>
         </ul>
     </nav>
 </header>
 
 <main>
-    <!-- User Info Section -->
+    <!-- USER INFO -->
     <section id="user-info">
-        <img src="https://via.placeholder.com/64" alt="User picture" id="user-picture">
-        <div>
-            <h1 id="username">Loading...</h1>
-            <p id="user-email"></p>
+        <img src="https://via.placeholder.com/64" alt="User avatar" id="user-picture">
+        <div class="user-details">
+            <p id="username">Loading...</p>
+            <p id="user-email" class="user-meta"></p>
             <button id="editProfileBtn" style="display: none; margin-top: 1rem;">Edit Profile</button>
         </div>
     </section>
 
-    <!-- Favorites Section -->
+    <!-- FAVORITES -->
     <section id="favorites">
-        <h2>Favorite Recipes (<span id="favorites-count">0</span>)</h2>
-        <div id="favorites-grid" class="recipes-grid"></div>
+        <h2>My Favorites (<span id="favorites-count">0</span>)</h2>
+        <p class="section-subtitle">Recipes you've saved</p>
+        <div id="favorites-grid" class="recipes-grid">
+            <!-- Loaded dynamically -->
+        </div>
     </section>
 
-    <!-- Shared Section -->
+    <!-- SHARED -->
     <section id="shared">
-        <h2>Shared Recipes (<span id="shared-count">0</span>)</h2>
-        <div id="shared-grid" class="recipes-grid"></div>
+        <h2>Shared (<span id="shared-count">0</span>)</h2>
+        <p class="section-subtitle">Recipes i have shared</p>
+        <div id="shared-grid" class="recipes-grid">
+            <!-- Loaded dynamically -->
+        </div>
     </section>
 
-    <!-- My Recipes Section -->
+    <!-- MY RECIPES -->
     <section id="my-recipes">
         <h2>My Recipes (<span id="recipes-count">0</span>)</h2>
-        <div id="recipes-grid" class="recipes-grid"></div>
+        <p class="section-subtitle">Recipes you've created</p>
+        <div id="recipes-grid" class="recipes-grid">
+            <!-- Loaded dynamically -->
+        </div>
     </section>
 </main>
 
@@ -60,14 +72,12 @@
                 <label for="profilePicture">Profile Picture:</label>
                 <input type="file" id="profilePicture" name="picture" accept="image/jpeg,image/jpg,image/png,image/gif">
                 <small>Max 5MB. Formats: JPG, PNG, GIF</small>
-                <p id="fileName" style="margin-top: 0.5rem; color: #666; font-style: italic;"></p>
+                <p id="fileName"></p>
             </div>
-
             <div class="form-group">
                 <label for="editUsername">Username:</label>
                 <input type="text" id="editUsername" name="username" required>
             </div>
-
             <button type="submit">Save Changes</button>
         </form>
         <div id="editMessage"></div>
@@ -85,7 +95,6 @@
                     <label for="recipeName">Recipe Name: *</label>
                     <input type="text" id="recipeName" required>
                 </div>
-
                 <div class="form-group">
                     <label for="recipeImage">Recipe Image:</label>
                     <input type="file" id="recipeImage" accept="image/jpeg,image/jpg,image/png,image/gif">
@@ -93,56 +102,42 @@
                     <p id="recipeFileName"></p>
                 </div>
             </div>
-
             <div class="form-group">
                 <label for="recipeDescription">Description: *</label>
                 <textarea id="recipeDescription" rows="3" required></textarea>
             </div>
-
             <div class="form-group">
                 <label for="recipePreparation">Preparation Steps: *</label>
                 <textarea id="recipePreparation" rows="6" required placeholder="Enter each step on a new line"></textarea>
             </div>
-
             <div class="form-row">
                 <div class="form-group">
                     <label for="recipeType">Meal Type: *</label>
                     <select id="recipeType" required>
                         <option value="">Select type...</option>
-                        <!-- Loaded dynamically -->
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label for="recipeDiet">Diet: *</label>
                     <select id="recipeDiet" required>
                         <option value="">Select diet...</option>
-                        <!-- Loaded dynamically -->
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label for="recipeCountry">Country: *</label>
                     <select id="recipeCountry" required>
                         <option value="">Select country...</option>
-                        <!-- Loaded dynamically -->
                     </select>
                 </div>
             </div>
-
             <div class="form-group">
                 <label for="recipeIngredients">Ingredients: *</label>
                 <select id="recipeIngredients">
                     <option value="">Select ingredients...</option>
-                    <!-- Loaded dynamically -->
                 </select>
                 <small>Select an ingredient to add it to your recipe</small>
-
-                <div id="selectedIngredients" class="chips-container">
-                    <!-- Selected ingredients appear here as chips -->
-                </div>
+                <div id="selectedIngredients" class="chips-container"></div>
             </div>
-
             <button type="submit">Create Recipe</button>
         </form>
         <div id="createMessage"></div>
@@ -157,5 +152,6 @@
 <script src="/scripts/checkAuth.js"></script>
 <script src="/scripts/profile.js"></script>
 <script src="/scripts/create_recipe.js"></script>
+
 </body>
 </html>

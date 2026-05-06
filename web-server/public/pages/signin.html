@@ -6,32 +6,39 @@
     <title>Le Gourmand | Sign In</title>
     <link rel="stylesheet" href="../style/root.css">
     <link rel="stylesheet" href="../style/signin.css">
+    <link rel="icon" type="image/png" href="/assets/favicon.webp">
 </head>
 <body>
+
 <main>
-    <h1>Sign In</h1>
+    <h1>Welcome back</h1>
+    <p class="auth-subtitle">Sign in to your Le Gourmand account</p>
+
     <form id="signinForm">
         <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required>
         </div>
         <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
         </div>
-        <button type="submit">Sign in</button>
-        <p class="redirect-link">
-            Don't have an account? <br> <a href="../pages/signup.html">Sign Up</a>
-        </p>
+        <button type="submit">Sign In</button>
     </form>
 
-    <div id="errorMessage" style="display: none; color: red; margin-top: 10px;"></div>
+    <div id="errorMessage" style="display: none;"></div>
+
+    <p class="auth-footer">
+        Don't have an account? <a href="/signup">Sign up</a>
+    </p>
 </main>
+
 <footer>
     <p>&copy; 2026 Le Gourmand. All rights reserved.</p>
 </footer>
 
 <script src="/scripts/config.js"></script>
 <script src="/scripts/signin.js"></script>
+
 </body>
 </html>

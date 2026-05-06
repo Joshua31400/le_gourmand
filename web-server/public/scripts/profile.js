@@ -60,11 +60,7 @@ function renderUserInfo(user) {
     document.getElementById('user-email').textContent = user.email;
 
     const userPicture = document.getElementById('user-picture');
-    if (user.picture) {
-        userPicture.src = user.picture;
-    } else {
-        userPicture.src = 'https://via.placeholder.com/64';
-    }
+    userPicture.src = user.picture;
 }
 
 // Load user's favorite recipes

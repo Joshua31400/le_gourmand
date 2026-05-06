@@ -1,57 +1,246 @@
+/* ============================================================
+   RECIPE DETAIL PAGE
+   ============================================================ */
+
 article {
-    margin: 2rem auto;
+    max-width: 780px;
+    margin: 0 auto;
 }
 
-article header {
+/* ─── HERO ───────────────────────────────────────────────── */
+.recipe-hero {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+    box-shadow: var(--shadow-md);
+}
+
+.recipe-hero img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    display: block;
+}
+
+/* overlay bas pour le titre superposé */
+.recipe-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top,
+    rgba(26,23,20,.6) 0%,
+    rgba(26,23,20,.1) 50%,
+    transparent 100%);
+    pointer-events: none;
+}
+
+.recipe-hero-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    padding: 2rem var(--pad-x) 1.5rem;
+}
+
+.recipe-hero-text h1 {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: .35rem;
+    text-shadow: 0 2px 8px rgba(0,0,0,.3);
+}
+
+/* ─── RATING ─────────────────────────────────────────────── */
+.recipe-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: rgba(255,253,251,.9);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: .35rem .7rem;
+    border-radius: var(--radius-pill);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semi);
+    color: var(--clr-dark);
+    box-shadow: var(--shadow-sm);
+}
+
+.recipe-rating .score {
+    color: var(--clr-mid);
+    font-weight: var(--weight-regular);
+}
+
+/* ─── ÉTOILES INTERACTIVES ───────────────────────────────── */
+.rating-stars {
+    display: flex;
+    gap: .1rem;
+    /* z-index > ::after overlay du hero pour que le hover fonctionne */
+    position: relative;
+    z-index: 2;
+}
+
+.rating-stars .star {
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 100ms ease, transform 100ms ease;
+    user-select: none;
+}
+
+.rating-stars .star.rated {
+    color: #e8a838;
+}
+
+.rating-stars .star.hovered {
+    color: #e8a838;
+    transform: scale(1.2);
+}
+
+/* ─── BOUTONS HERO ───────────────────────────────────────── */
+.hero-actions {
+    display: flex;
+    gap: .6rem;
+    margin-top: .75rem;
+    flex-wrap: wrap;
+}
+
+.hero-actions button {
+    font-size: var(--text-sm);
+}
+
+/* ─── SECTIONS DÉTAIL ────────────────────────────────────── */
+.detail-section {
+    background: var(--clr-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 1.4rem var(--pad-x) 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(26,23,20,.04);
+
+    animation: fadeUp var(--dur-md) var(--ease) both;
+}
+
+.detail-section:nth-child(1) { animation-delay: .06s; }
+.detail-section:nth-child(2) { animation-delay: .12s; }
+.detail-section:nth-child(3) { animation-delay: .18s; }
+.detail-section:nth-child(4) { animation-delay: .24s; }
+
+.detail-section h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-md);
+    font-weight: var(--weight-semi);
+    color: var(--clr-dark);
+    margin-bottom: .6rem;
+    padding-bottom: .4rem;
+    border-bottom: 2px solid var(--clr-accent-pale);
+    display: inline-block;
+}
+
+.detail-section p {
+    font-size: var(--text-base);
+    color: var(--clr-mid);
+    line-height: 1.7;
+}
+
+/* ─── DL INFO — tags horizontaux ─────────────────────────── */
+#infos dl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+}
+
+#infos dt {
+    display: none;
+}
+
+#infos dd {
+    display: inline-flex;
+    align-items: center;
+    background: var(--clr-accent-pale);
+    color: var(--clr-accent);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    padding: .35rem .85rem;
+    border-radius: var(--radius-pill);
+    margin: 0;
+}
+
+/* ─── UL INGRÉDIENTS ─────────────────────────────────────── */
+#ingredients ul {
     display: flex;
     flex-direction: column;
+    gap: .55rem;
+}
+
+#ingredients li {
+    display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
+    gap: .6rem;
+    font-size: var(--text-base);
+    color: var(--clr-dark);
+    padding: .45rem 0;
+    border-bottom: 1px solid rgba(26,23,20,.05);
 }
 
-article header img {
-    width: 300px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: var(--page-radius);
+#ingredients li:last-child {
+    border-bottom: none;
 }
 
-article h1 {
-    font-size: var(--font-size-large);
-    color: var(--primary-color);
+#ingredients li::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
+    background: var(--clr-accent);
+    border-radius: 50%;
 }
 
-article button {
-    margin-top: 1rem;
+/* ─── OL PRÉPARATION ─────────────────────────────────────── */
+#preparation ol {
+    display: flex;
+    flex-direction: column;
+    gap: .85rem;
+    counter-reset: steps;
 }
 
-section {
-    margin-bottom: 2rem;
-    text-align: left;
-    color: var(--surface-color);
-    background-color: var(--secondary-color);
-    padding: var(--page-padding);
-    border-radius: var(--page-radius);
+#preparation li {
+    display: flex;
+    align-items: flex-start;
+    gap: .85rem;
+    font-size: var(--text-base);
+    color: var(--clr-mid);
+    line-height: 1.6;
+    counter-increment: steps;
 }
 
-section h2 {
-    color: var(--accent-color);
-    font-size: var(--font-size-base);
-    margin-bottom: 0.5rem;
+#preparation li::before {
+    content: counter(steps);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    background: var(--clr-accent);
+    color: #fff;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semi);
+    border-radius: 50%;
+    line-height: 1;
 }
 
-dl, ul, ol {
-    margin-left: 1.5rem;
-    margin-bottom: 0.5rem;
-}
-
-dt {
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-dd {
-    margin-left: 1rem;
-    margin-bottom: 0.5rem;
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .recipe-hero img {
+        height: 240px;
+    }
+    .recipe-hero-text h1 {
+        font-size: var(--text-xl);
+    }
 }
