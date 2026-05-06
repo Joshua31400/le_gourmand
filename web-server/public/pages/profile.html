@@ -31,7 +31,7 @@
             <p id="username">Loading...</p>
             <p id="user-email" class="user-meta"></p>
             <button id="editProfileBtn" style="display: none; margin-top: 1rem;">Edit Profile</button>
-        </div>
+            <button id="dmBtn" style="display: none; margin-top: 1rem;">Message</button>        </div>
     </section>
 
     <!-- FAVORITES -->
@@ -143,7 +143,20 @@
         <div id="createMessage"></div>
     </div>
 </div>
+<!-- Chat Pop-up -->
+<div id="chatPopup" class="chat-popup" style="display: none;">
+    <div class="chat-header">
+        <span id="chatUserName">Discussion</span>
+        <span class="close-chat" id="closeChatBtn">&times;</span>
+    </div>
+    <div class="chat-messages" id="chatMessages">
 
+    </div>
+    <form id="chatForm" class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="Votre message..." required autocomplete="off">
+        <button type="submit">Envoyer</button>
+    </form>
+</div>
 <footer>
     <p>&copy; 2026 Le Gourmand. All rights reserved.</p>
 </footer>

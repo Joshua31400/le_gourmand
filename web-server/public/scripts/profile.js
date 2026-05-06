@@ -404,6 +404,162 @@ async function handleEditProfile(e) {
     }
 }
 
+/* ============================================================
+   LOGIQUE DE LA MESSAGERIE (CHAT / DM)
+   ============================================================ */
+
+let currentConversationId = null;
+let chatPollingInterval = null;
+
+// Afficher le bouton DM si on est sur le profil de quelqu'un d'autre
+function showDMButtonIfNotOwn(isOwn) {
+    const dmBtn = document.getElementById('dmBtn');
+    if (!isOwn && dmBtn) {
+        dmBtn.style.display = 'inline-block';
+        dmBtn.addEventListener('click', openChat);
+    }
+}
+
+// Ouvrir la fenêtre de chat
+async function openChat() {
+    const targetUserId = getUserIdFromUrl();
+    const userStr = localStorage.getItem('user');
+
+    if (!userStr) return alert("Vous devez être connecté pour envoyer un message.");
+    const currentUser = JSON.parse(userStr);
+
+    try {
+        const token = localStorage.getItem('token');
+
+        const response = await fetch(`${CONFIG.API_URL}/chat/conversations`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                user1Id: currentUser.id,
+                targetUserId: targetUserId
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            currentConversationId = data.data.conversationId;
+
+            document.getElementById('chatPopup').style.display = 'flex';
+            document.getElementById('chatUserName').textContent = document.getElementById('username').textContent;
+
+            await loadMessages();
+
+            if (chatPollingInterval) clearInterval(chatPollingInterval);
+            chatPollingInterval = setInterval(loadMessages, 3000); // Recharge les messages toutes les 3s
+
+            scrollToBottom();
+        } else {
+            console.error("Erreur création conversation:", data.message);
+        }
+    } catch (error) {
+        console.error('Erreur lors de l\'ouverture du chat:', error);
+    }
+}
+
+// Charger les messages de la conversation active
+async function loadMessages() {
+    if (!currentConversationId) return;
+
+    try {
+        const token = localStorage.getItem('token');
+        const currentUser = JSON.parse(localStorage.getItem('user'));
+
+        const response = await fetch(`${CONFIG.API_URL}/chat/conversations/${currentConversationId}/messages`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            const chatBox = document.getElementById('chatMessages');
+            chatBox.innerHTML = ''; // On vide avant de remplir
+
+            data.data.forEach(msg => {
+                const msgDiv = document.createElement('div');
+                const isMe = parseInt(msg.sender_id) === parseInt(currentUser.id);
+
+                msgDiv.className = `message ${isMe ? 'sent' : 'received'}`;
+                msgDiv.textContent = msg.content;
+                chatBox.appendChild(msgDiv);
+            });
+
+            scrollToBottom();
+        }
+    } catch (error) {
+        console.error('Erreur chargement des messages:', error);
+    }
+}
+
+// Configuration des événements du Chat (Envoi de formulaire et fermeture)
+function setupChatEvents() {
+    const chatForm = document.getElementById('chatForm');
+    const closeChatBtn = document.getElementById('closeChatBtn');
+
+    if (chatForm) {
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const input = document.getElementById('chatInput');
+            const content = input.value.trim();
+            const userStr = localStorage.getItem('user');
+
+            if (!content || !currentConversationId || !userStr) return;
+            const currentUser = JSON.parse(userStr);
+
+            try {
+                const token = localStorage.getItem('token');
+
+                const response = await fetch(`${CONFIG.API_URL}/chat/conversations/${currentConversationId}/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        senderId: currentUser.id,
+                        content: content
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    input.value = ''; // Vide le champ après envoi
+                    await loadMessages(); // Recharge la discussion immédiatement
+                }
+            } catch (error) {
+                console.error('Erreur envoi message:', error);
+            }
+        });
+    }
+
+    if (closeChatBtn) {
+        closeChatBtn.addEventListener('click', () => {
+            document.getElementById('chatPopup').style.display = 'none';
+            if (chatPollingInterval) {
+                clearInterval(chatPollingInterval);
+            }
+        });
+    }
+}
+
+// Auto-scroll vers le bas de la discussion
+function scrollToBottom() {
+    const chatBox = document.getElementById('chatMessages');
+    if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+}
+
+
 // Initialize page
 async function init() {
     const userId = getUserIdFromUrl();
@@ -417,6 +573,7 @@ async function init() {
 
     setupLogout();
     setupModal();
+    setupChatEvents(); // Initialisation des events du chat
 
     await loadUserProfile(userId);
     await loadFavorites(userId, isOwn);
@@ -424,6 +581,7 @@ async function init() {
     await loadMyRecipes(userId, isOwn);
 
     showEditButtonIfOwn(isOwn);
+    showDMButtonIfNotOwn(isOwn); // Affichage du bouton de chat si ce n'est pas notre profil
 }
 
 init();
