@@ -1,69 +1,65 @@
 <p align="center">
   <img src="docs/assets/header-readme.png" alt="banner" height="400"/>
 </p>    
-<div align="center">
-    <p>
-        <h2>📁Table of content</h2>
-        <a href="#introduction">📖 Introduction</a> •
-        <a href="#how-to-install">🚀 How to install</a> •
-        <a href="#credits">🔗 Credits</a>
-    </p>
-</div>
 
----
+## 🚀 Présentation du projet
 
-<h2 id="introduction" align="center">📖 Introduction</h2>
-**Le Gourmand** is an web application designed to help users to find recipes based on filters such as ingredients, dietary preferences, and cooking time. It provides a user-friendly interface to explore a wide variety of recipes, making it easier for users to discover new dishes and plan their meals.  
-**Users** can olso login to save their favorite recipes.  
+"Le Gourmand" est une application web moderne permettant aux utilisateurs de partager, découvrir et organiser des recettes culinaires. Le projet met l'accent sur une architecture découplée, une conteneurisation robuste et une infrastructure évolutive.
 
-All data is stored into a database, and the application interacts with it using SQL queries and we use an API to fetch data from the database and display it on the front-end.
+## 🛠️ Architecture Technique
 
+L'application repose sur une architecture 3-tiers conteneurisée avec Docker :
 
-<br>
-<details>
-  <summary><b>About the origin of the content</b> (Click to expand)</summary>
-  <br>
-This project was created as part of a school assignment at Ynov Toulouse for BOOST dev module.
-</details>
+* **Front-end :** Serveur web Node.js/Express.
+* **Back-end :** API RESTful Node.js/Express 5.
+* **Base de données :** MySQL 8.0 pour la persistance des données (utilisateurs, recettes, ingrédients, messagerie).
 
----
+## 🐳 Conteneurisation \& Infrastructure
 
-<h2 id="how-to-install" align="center">🚀 How to install?</h2>
+Le projet utilise Docker pour garantir la portabilité et la reproductibilité des environnements.
 
-1.  **Clone the repository** to your local machine using your terminal:
-    ```bash
-    git https://github.com/Joshua31400/le_gourmand.git
-    ```
-2.  **Navigate** to the project directory:
-    ```bash
-    cd la_gourmand
-    ```
----
+### Points clés de la configuration :
 
-<h2 id="credits" align="center">🔗 Credits</h2>
+* **Isolation :** Utilisation d'images `node:20-alpine` pour optimiser la légèreté et la sécurité.
+* **Sécurité :** Exécution des conteneurs via un utilisateur non-root (`USER node`).
+* **Réseau :** Isolation via un pont privé (`gourmand-network`) pour sécuriser les accès à la base de données.
+* **Persistance :** Volumes gérés (`db-data`, `uploads-data`) pour la conservation des données et des médias.
+* **Orchestration :** Gestion des dépendances de démarrage avec `healthcheck` pour éviter les erreurs de connexion.
 
-<div align="center">
-    <a href="https://github.com/joshua31400">
-        <img src="https://avatars.githubusercontent.com/u/189393167?v=4" alt="Joshua BUDGEN" width="60" height="60" style="border-radius: 50%"/>
-    </a>
-    <a href="https://github.com/pmartins22">
-        <img src="https://avatars.githubusercontent.com/u/201771836?v=4" alt="Pedro MARTINS" width="60" height="60" style="border-radius: 50%"/>
-    </a>
-    <a href="https://github.com/tompass">
-        <img src="https://avatars.githubusercontent.com/u/7830447?s=200&v=4" alt="Thomas PASSERMAN" width="60" height="60" style="border-radius: 50%"/>
-    </a>
-    <a href="https://github.com/lucas-aww">
-        <img src="https://avatars.githubusercontent.com/u/195119506?v=4" alt="Lucas KOCHEIDA" width="60" height="60" style="border-radius: 50%"/>
-    </a>
-    <br>
-    <p><i>Adapté et développé par :</i></p>
-    <p><i>Pedro MARTINS • Tom PASSERMAN • Lucas KOCHEIDA • Joshua BUDGEN</i></p>
-<br>
-        
-Remerciments spéciaux à **<a href="https://www.ynov.com/campus/toulouse" target="_blank">Toulouse Ynov Campus</a>**
-</div>
+## ⚙️ Installation \& Lancement
 
----
+### Prérequis
+
+* [Docker](https://www.docker.com/) et [Docker Compose](https://docs.docker.com/compose/) installés sur votre machine.
+
+### Instructions de lancement
+
+1. Clonez ce dépôt :
+
+```bash
+git clone <URL\_DU\_REPO>
+cd le\_gourmand
+```
+
+2. Lancez l'infrastructure complète :
+
+```bash
+docker compose up --build
+```
+
+3. L'application est disponible aux adresses suivantes :
+
+    * **Web UI :** http://localhost:3002
+    * **API :** http://localhost:3001
+
+## 📝 Justification des choix
+
+Pour une documentation détaillée sur nos choix d'architecture (modèle 3-tiers, Express 5, conteneurisation), veuillez consulter le fichier `Rapport\_Technique\_Conteneurisation\_v2.pdf` inclus dans ce dépôt.
+
+## 🔗 Credits
+
+Adapté et développé par :  
+**Pedro MARTINS • Tom PASSERMAN • Sebastien Delver • Joshua BUDGEN**
 
 <div align="center">
     <p>Copyright © 2026. All Rights Reserved.</p>
