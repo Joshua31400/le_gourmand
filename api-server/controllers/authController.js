@@ -4,17 +4,19 @@ const jwt = require('jsonwebtoken');
 
 // Helper function to generate JWT token
 const generateToken = (user) => {
+    // On s'assure de bien utiliser la variable d'environnement
+    const secret = process.env.JWT_SECRET;
+
     return jwt.sign(
         {
             id: user.id,
             email: user.email,
             username: user.username
         },
-        process.env.JWT_SECRET,
+        secret,
         { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
     );
 };
-
 // POST register
 exports.register = async (req, res) => {
     try {

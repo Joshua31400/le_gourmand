@@ -1,0 +1,61 @@
+services:
+  # 1. Le Serveur Web (Frontend)
+  web:
+    build:
+      context: .
+      dockerfile: ./web-server/Dockerfile
+    ports:
+      - "3002:3002"
+    networks:
+      - gourmand-network
+    volumes:
+      - uploads-data:/app/public/assets
+    depends_on:
+      - api
+
+  # 2. L'API Server (Backend)
+  api:
+    build:
+      context: .
+      dockerfile: ./api-server/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - DB_HOST=database
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=3001
+    networks:
+      - gourmand-network
+    depends_on:
+      database:
+        condition: service_healthy
+
+  # 3. La Base de données
+  database:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - gourmand-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  gourmand-network:
+    driver: bridge
+
+volumes:
+  db-data:
+  uploads-data:

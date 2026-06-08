@@ -14,7 +14,7 @@ exports.verifyToken = (req, res, next) => {
     }
 
     try {
-        // Verify token
+        // Verify token avec la vraie clé secrète de ton .env
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
         next();
@@ -24,4 +24,4 @@ exports.verifyToken = (req, res, next) => {
             message: 'Invalid or expired token.'
         });
     }
-};
+}

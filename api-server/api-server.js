@@ -1,9 +1,8 @@
-require('dotenv').config({ path: __dirname + '/.env' });
 const express = require('express');
 const cors = require('cors');
-
 const app = express();
-const PORT = process.env.PORT;
+
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
@@ -18,6 +17,7 @@ const dietRoutes = require('./routes/diets');
 const countryRoutes = require('./routes/countries');
 const recipeTypeRoutes = require('./routes/recipeTypes');
 const chatRoutes = require('./routes/chat');
+
 // Use routes
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/auth', authRoutes);
@@ -55,7 +55,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`API Server running on port: ${PORT}`);
-    console.log(`http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 API Server running on port: ${PORT}`);
 });

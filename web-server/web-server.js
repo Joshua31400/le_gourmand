@@ -1,11 +1,8 @@
-// Load .env from current directory (web-server folder)
-require('dotenv').config({ path: __dirname + '/.env' });
-
-const express = require('express');
 const path = require('path');
-
+const express = require('express');
 const app = express();
-const PORT = process.env.PORT;
+
+const PORT = process.env.WEB_PORT || 3002;
 
 // Middleware
 app.use(express.json());
@@ -19,7 +16,6 @@ const uploadRoutes = require('./routes/upload');
 app.use('/', pageRoutes);
 app.use('/', uploadRoutes);
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`🌐 Web Server running on port: ${PORT}`);
-    console.log(`📍 http://localhost:${PORT}`);
 });
